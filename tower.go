@@ -10,6 +10,7 @@ func (c *Character) TowerTravelDisplay(text, textOption1, textOption2 string) in
 	fmt.Print("Votre choix : ")
 	var LoreChoice int
 	fmt.Scan(&LoreChoice)
+	return LoreChoice
 }
 
 /*
@@ -90,3 +91,4 @@ func main() {
 		}
 	}
 }
+*/
