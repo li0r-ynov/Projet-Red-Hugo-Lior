@@ -30,7 +30,7 @@ func (c *Character) accessInventory() {
 	}
 }
 
-func (c *Character) Money(cost int){
+func (c *Character) Moni(cost int){
 	var money int 
 	if money <  cost{
 		fmt.Println("T'as pas les tales clochard")
