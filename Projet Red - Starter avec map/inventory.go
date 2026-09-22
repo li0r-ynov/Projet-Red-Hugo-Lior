@@ -1,7 +1,8 @@
 package main
 
-import ("fmt")
-
+import (
+	"fmt"
+)
 
 func (c *Character) accessInventory() {
 	for {
@@ -26,5 +27,15 @@ func (c *Character) accessInventory() {
 		default:
 			fmt.Println("Choix invalide, veuillez réessayer.")
 		}
+	}
+}
+
+func (c *Character) Money(cost int){
+	var money int 
+	if money <  cost{
+		fmt.Println("T'as pas les tales clochard")
+	} else {
+		money -= cost
+		fmt.Println("Merci pour vos achats")
 	}
 }
