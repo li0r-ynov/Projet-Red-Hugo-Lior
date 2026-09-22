@@ -6,12 +6,14 @@ import (
 
 // Character représente un personnage jouable avec ses points de vie et son inventaire.
 type Character struct {
-	Name       string
-	Classe     string
-	PvMax      int
-	Pv         int
-	Inventaire map[string]int
-	money      int
+	Name                    string
+	Classe                  string
+	PvMax                   int
+	Pv                      int
+	Inventaire              map[string]int
+	money                   int
+	PotionGratuiteRecuperee bool
+	LimitInventaire         int
 }
 
 // initCharacter initialise un personnage selon sa classe (PV max différents)
@@ -19,6 +21,8 @@ type Character struct {
 func (c *Character) initCharacter(name string, class string) {
 	c.Name = name
 	c.Classe = class
+	c.LimitInventaire = 10
+	c.money = 1000
 	switch c.Classe {
 	case "athénien ":
 		c.PvMax = 100

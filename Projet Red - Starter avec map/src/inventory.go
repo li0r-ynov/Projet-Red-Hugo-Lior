@@ -29,13 +29,21 @@ func (c *Character) accessInventory() {
 		}
 	}
 }
-
-func (c *Character) Money(cost int){
-	var money int 
-	if money <  cost{
-		fmt.Println("T'as pas les tales clochard")
-	} else {
-		money -= cost
-		fmt.Println("Merci pour vos achats")
+func (c *Character) CheckPlace() bool {
+	var itemsQuantity int = 0
+	for _, quantity := range c.Inventaire {
+		itemsQuantity += quantity
 	}
+
+	return itemsQuantity < c.LimitInventaire
+}
+
+func (c *Character) Money(cost int) bool {
+	if c.money < cost {
+		fmt.Println("T'as pas les tales clochard")
+		return false
+	}
+	c.money -= cost
+	return true
+
 }
