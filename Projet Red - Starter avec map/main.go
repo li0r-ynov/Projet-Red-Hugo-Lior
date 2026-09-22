@@ -46,7 +46,7 @@ func main() {
 		switch step1 {
 		case 1:
 			fmt.Println("Vous vous dirigez vers le Marché.")
-
+			player.MerchantMenu()
 		case 2:
 			fmt.Println("Vous vous dirigez vers la Tour.")
 
