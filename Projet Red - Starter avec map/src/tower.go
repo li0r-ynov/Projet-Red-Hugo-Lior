@@ -1,8 +1,9 @@
-package main
+package src
 
 import "fmt"
 
 func (c *Character) TowerTravelDisplay(text, textOption1, textOption2, textOption3, textOption4, textOption5 string) int {
+
 	fmt.Println(text)
 	fmt.Println("\t 1 - ", textOption1)
 	fmt.Println("\t 2 - ", textOption2)

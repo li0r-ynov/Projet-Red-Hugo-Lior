@@ -1,16 +1,12 @@
-package main
+package src
 
-import (
-	"fmt"
-
-	"golang.org/x/text/cases"
-)
+import "fmt"
 
 func (c *Character) MerchantMenu() {
 	// afficher les objets du marchand
 	// demander le choix
 	// ajouter l'objet à l'inventaire
-
+	var chose int
 	for true {
 		fmt.Println("=== Marché ===")
 		fmt.Println("\t 1 - Marchand")
@@ -18,25 +14,18 @@ func (c *Character) MerchantMenu() {
 		fmt.Println("\t 0 - Retour à la carte")
 
 		fmt.Print("Votre choix : ")
-		var chose int
 		fmt.Scan(&chose)
 
-	}
-switch step1 {
+		switch chose {
 		case 1:
-			
+			return
 		case 2:
 			fmt.Println("Vous vous dirigez vers la Tour.")
-
-		case 3:
-			fmt.Println("Vous vous dirigez vers les Maisons des Dieux.")
-
-		case 4:
-			player.MenuPrincipale()
 		case 0:
-			return
+			fmt.Println("alaide")
+			break
 		default:
 			fmt.Println("Choix invalide.")
-case
-
+		}
+	}
 }

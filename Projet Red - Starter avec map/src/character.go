@@ -1,7 +1,8 @@
-package main
+package src
 
 import (
-"fmt")
+	"fmt"
+)
 
 // Character représente un personnage jouable avec ses points de vie et son inventaire.
 type Character struct {
@@ -10,6 +11,7 @@ type Character struct {
 	PvMax      int
 	Pv         int
 	Inventaire map[string]int
+	money      int
 }
 
 // initCharacter initialise un personnage selon sa classe (PV max différents)

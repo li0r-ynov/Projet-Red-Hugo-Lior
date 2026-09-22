@@ -1,3 +1,3 @@
-module github.com/li0r-ynov/Projet-Red-Hugo-Lior
+module projet_red
 
 go 1.27.1
