@@ -1,7 +1,8 @@
 package main
 
-import ("fmt")
-
+import (
+	"fmt"
+)
 
 func (c *Character) accessInventory() {
 	for {
