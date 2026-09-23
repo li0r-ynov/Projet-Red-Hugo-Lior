@@ -4,14 +4,15 @@ import "fmt"
 
 func DisplayMarket() {
 	fmt.Println("=== Marché ===")
-	fmt.Println("\t 1 - potion de poison (10 piéce d'or)")
-	fmt.Println("\t 2 - potion d'ambroisie (5€)")
+	fmt.Println("\t 1 - potion d'ambroisie (10 pièces d'or)")
+	fmt.Println("\t 2 - potion de poison (5 pièces d'or)")
 	fmt.Println("\t potion de pâques")
 	fmt.Println("\t Le marchand vous offre une Potion d'ambroisie")
 	fmt.Println("\t Vous venez d'acheter une potion d'ambroisie")
 	fmt.Println("\t vous venez d'acheter une potion de poison hahaha !")
 	fmt.Println("\t Vous venez d'acheter une potion de pâques ")
 	fmt.Println("\t 0 - Retour à la carte")
+	fmt.Printf("\t Pièces d'or : %d\n", c.money)
 	fmt.Println("------------------------------")
 	fmt.Println("Votre choix ?")
 }
@@ -23,15 +24,15 @@ func (c *Character) MarketMenu() {
 		fmt.Scan(&chose)
 
 		if chose != 0 && !c.CheckPlace() {
-			fmt.Println("\nImpossible pas de place dans l'inventaire....\n")
+			fmt.Println("\nImpossible pas de place dans l'inventaire....")
 			continue
 		}
 
 		switch chose {
 		case 1:
 			if c.Money(10) {
-				c.Inventaire["Potion de vies"] += 1
-				fmt.Println("-10€, vous avez acheté une potion de vie")
+				c.Inventaire["Potion d'ambroisie"] += 1
+				fmt.Println("-10 pièces d'or, vous avez acheté une potion d'ambroisie")
 			}
 
 		case 2:

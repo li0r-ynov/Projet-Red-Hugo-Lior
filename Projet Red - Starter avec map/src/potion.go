@@ -48,7 +48,7 @@ func (c *Character) takePot(potionChoice int) {
 	case 2:
 		fmt.Println("Potion de poison utilisée, la potion va maintenant infligé 10 points de vie de dégats par seconde pendant 3 sec")
 	case 3:
-		fmt.Println("Potion de pâques à faire")
+		fmt.Println("Vous venez d'acheter une potion de pâques ")
 	}
 
 	c.Inventaire[potionName]--

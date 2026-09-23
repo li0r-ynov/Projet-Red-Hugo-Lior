@@ -22,7 +22,7 @@ func (c *Character) initCharacter(name string, class string) {
 	c.Name = name
 	c.Classe = class
 	c.LimitInventaire = 10
-	c.money = 1000
+	c.money = 10
 	switch c.Classe {
 	case "athénien ":
 		c.PvMax = 100
@@ -51,4 +51,6 @@ func (c Character) displaylnfo() {
 	fmt.Printf("\t PV       : %d\n", c.Pv)
 	fmt.Printf("\t PV max   : %d\n", c.PvMax)
 	fmt.Printf("\t Inventaire : %d objet(s)\n", totalItems)
+	fmt.Printf("\t Pièces d'or : %d\n", c.money)
+
 }
