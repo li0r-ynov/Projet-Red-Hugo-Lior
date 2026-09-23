@@ -20,4 +20,3 @@ var oppsdef = map[string]opps{
 "Zeus" : {Name: "Zeus",PvMax: 150,Pv: 150,Damage: 30},
 "Hadès" : {Name: "Hadès",PvMax: 150,Pv: 150,Damage: 30},
 }
-

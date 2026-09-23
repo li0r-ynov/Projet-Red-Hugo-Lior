@@ -16,6 +16,7 @@ type Character struct {
 	Renown     int
 	PotionGratuiteRecuperee bool
 	LimitInventaire         int
+	
 }
 
 // initCharacter initialise un personnage selon sa classe (PV max différents)
