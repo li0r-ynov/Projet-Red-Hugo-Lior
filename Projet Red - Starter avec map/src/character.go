@@ -11,7 +11,7 @@ type Character struct {
 	PvMax      int
 	Pv         int
 	Inventaire map[string]int
-	Money      int
+	Money      int 
 	Level      string
 	Renown     int
 	PotionGratuiteRecuperee bool
@@ -21,9 +21,7 @@ type Character struct {
 
 // initCharacter initialise un personnage selon sa classe (PV max différents)
 // et lui donne un inventaire de départ.
-func (c *Character) initCharacter(name string, class string) {
-	c.Name = name
-	c.Classe = class
+func (c *Character) initCharacter() {
 	c.LimitInventaire = 10
 	c.Money = 1000
 	switch c.Classe {
@@ -60,7 +58,7 @@ func (c Character) displaylnfo() {
 	fmt.Printf("\t PV       : %d\n", c.Pv)
 	fmt.Printf("\t PV max   : %d\n", c.PvMax)
 	fmt.Printf("\t Inventaire : %d objet(s)\n", totalItems)
-	fmt.Println("\t Pièce d'or : %d", c.Moni)
+	fmt.Println("\t Pièce d'or : %d", c.Money)
 	fmt.Printf("Titre : %s\n", c.Level)
 	fmt.Printf("Renommée : %d\n", c.Renown)
 }

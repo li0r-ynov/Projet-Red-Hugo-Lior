@@ -30,12 +30,11 @@ func (c *Character) accessInventory() {
 	}
 }
 
-func (c *Character) Moni(cost int){
-	var money int 
-	if money <  cost{
+func (c *Character) Moni(cost int) {
+	if c.Money <= cost {
 		fmt.Println("T'as pas les tales clochard")
 	} else {
-		money -= cost
+		c.Money -= cost
 		fmt.Println("Merci pour vos achats")
 	}
 }

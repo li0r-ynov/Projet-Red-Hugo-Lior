@@ -2,36 +2,45 @@ package src
 
 import "fmt"
 
-func DisplayMarket() {
+func (c *Character) DisplayMarket() {
 	fmt.Println("=== Marché ===")
-	fmt.Println("\t 1 - potion de poison (10 piéce d'or)")
-	fmt.Println("\t 2 - potion d'ambroisie (5€)")
+	fmt.Println("\t 1 - potion d'ambroisie (3 pièces d'or)")
+	fmt.Println("\t 2 - potion de poison (5 pièces d'or)")
 	fmt.Println("\t potion de pâques")
-	fmt.Println("\t Le marchand vous offre une Potion d'ambroisie")
-	fmt.Println("\t Vous venez d'acheter une potion d'ambroisie")
-	fmt.Println("\t vous venez d'acheter une potion de poison hahaha !")
-	fmt.Println("\t Vous venez d'acheter une potion de pâques ")
+
 	fmt.Println("\t 0 - Retour à la carte")
+	fmt.Printf("\t Pièces d'or : %d\n", c.Money)
 	fmt.Println("------------------------------")
 	fmt.Println("Votre choix ?")
 }
 
+/* func (c *Character) count(prix int) {
+	if c.Moni < prix {
+		fmt.Println("vous n'avez pas assez d epièces d'or.")
+		return
+	}
+	fmt.Printf("il vous reste %d pièces d'or.%n", c.Moni)
+	c.Moni(10)
+}
+*/
 func (c *Character) MarketMenu() {
 	for true {
-		DisplayMarket()
+		c.DisplayMarket()
 		var chose int
 		fmt.Scan(&chose)
 
-		if chose != 0 && !c.CheckPlace() {
-			fmt.Println("\nImpossible pas de place dans l'inventaire....\n")
-			continue
-		}
-
 		switch chose {
 		case 1:
-			c.Moni(10)
+			if !c.PotionGratuiteRecuperee {
+				fmt.Println("\t Le marchand vous offre une Potion d'ambroisie")
+				c.PotionGratuiteRecuperee = true
+			} else {
+				fmt.Println("\t vous venez d'acheter une potion d'ambroisie")
+				c.Moni(3)
+			}
 		case 2:
-			fmt.Println("Vous vous dirigez vers la Tour.")
+			fmt.Println("\t vous venez d'acheter une potion de poison hahaha !")
+			c.Moni(5)
 		case 0:
 			fmt.Println("alaide")
 			return
@@ -42,16 +51,17 @@ func (c *Character) MarketMenu() {
 
 }
 
+/* func cost int (){
+
+} */
+
+/* fmt.Println("\t Vous venez d'acheter une potion de pâques ") */
+
 /* func marketplace() {
 
-	if !c.PotionGratuiteRecuperee {
-		fmt.Println("\t1 - Potion d'ambroisie - GRATUITE")
-	} else {
-		fmt.Println("\t1 - Potion d'ambroisie - 3 pièces d'or")
-	}
+
 
 	fmt.Println("\t0 - Retour")
-
 	fmt.Print("Votre choix : ")
 	var choice int
 	fmt.Scan(&choice)
