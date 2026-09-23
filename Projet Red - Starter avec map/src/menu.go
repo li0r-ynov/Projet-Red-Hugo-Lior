@@ -2,9 +2,13 @@ package src
 
 import "fmt"
 
+func (c *Character) MenuInitCharacter() {
+	fmt.Println("aaaaaaaa")
+	c.initCharacter()
+	
+}
+
 func (c *Character) MenuPrincipale() {
-	var player Character
-	player.initCharacter("athénien", "civil")
 
 	for true {
 		fmt.Println("=== Menu Principal ===")
@@ -21,7 +25,7 @@ func (c *Character) MenuPrincipale() {
 		case 0:
 			return
 		case 1:
-			c.displaylnfo()
+			c.initCharacter()
 		case 2:
 			c.accessInventory()
 		case 3:
@@ -33,7 +37,7 @@ func (c *Character) MenuPrincipale() {
 }
 
 func (c *Character) Menutest() {
-	c.initCharacter("athénien", "civil")
+	c.initCharacter()
 	for true {
 		step1 := c.TowerTravelDisplay(
 			"Où souhaitez-vous vous rendre ?",

@@ -6,30 +6,36 @@ import (
 
 // Character représente un personnage jouable avec ses points de vie et son inventaire.
 type Character struct {
-	Name                    string
-	Classe                  string
-	PvMax                   int
-	Pv                      int
-	Inventaire              map[string]int
-	money                   int
+	Name       string
+	Classe     string
+	PvMax      int
+	Pv         int
+	Inventaire map[string]int
+	Money      int 
+	Level      string
+	Renown     int
 	PotionGratuiteRecuperee bool
 	LimitInventaire         int
 }
 
 // initCharacter initialise un personnage selon sa classe (PV max différents)
 // et lui donne un inventaire de départ.
-func (c *Character) initCharacter(name string, class string) {
-	c.Name = name
-	c.Classe = class
+func (c *Character) initCharacter() {
 	c.LimitInventaire = 10
-	c.money = 10
+	c.Money = 1000
 	switch c.Classe {
 	case "athénien ":
 		c.PvMax = 100
 		c.Pv = c.PvMax / 2
-	case "civil":
+		c.Money = 10
+		c.Level = "Civil"
+		c.Renown = 0
+	case "Sparte":
 		c.PvMax = 100
 		c.Pv = c.PvMax / 2
+		c.Money = 10
+		c.Level = "Civil"
+		c.Renown = 0
 	}
 	c.Inventaire = map[string]int{
 		PotionSoin:   1,
@@ -51,6 +57,7 @@ func (c Character) displaylnfo() {
 	fmt.Printf("\t PV       : %d\n", c.Pv)
 	fmt.Printf("\t PV max   : %d\n", c.PvMax)
 	fmt.Printf("\t Inventaire : %d objet(s)\n", totalItems)
-	fmt.Printf("\t Pièces d'or : %d\n", c.money)
-
+	fmt.Println("\t Pièce d'or : %d", c.Money)
+	fmt.Printf("Titre : %s\n", c.Level)
+	fmt.Printf("Renommée : %d\n", c.Renown)
 }

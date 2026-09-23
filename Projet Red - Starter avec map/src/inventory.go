@@ -29,6 +29,16 @@ func (c *Character) accessInventory() {
 		}
 	}
 }
+
+func (c *Character) Moni(cost int) {
+	if c.Money <= cost {
+		fmt.Println("T'as pas les tales clochard")
+	} else {
+		c.Money -= cost
+		fmt.Println("Merci pour vos achats")
+	}
+}
+
 func (c *Character) CheckPlace() bool {
 	var itemsQuantity int = 0
 	for _, quantity := range c.Inventaire {
@@ -36,14 +46,4 @@ func (c *Character) CheckPlace() bool {
 	}
 
 	return itemsQuantity < c.LimitInventaire
-}
-
-func (c *Character) Money(cost int) bool {
-	if c.money < cost {
-		fmt.Println("T'as pas les tales clochard")
-		return false
-	}
-	c.money -= cost
-	return true
-
 }
