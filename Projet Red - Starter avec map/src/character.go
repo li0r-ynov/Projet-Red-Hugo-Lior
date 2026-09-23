@@ -14,6 +14,8 @@ type Character struct {
 	Money      int
 	Level      string
 	Renown     int
+	PotionGratuiteRecuperee bool
+	LimitInventaire         int
 }
 
 // initCharacter initialise un personnage selon sa classe (PV max différents)
@@ -21,6 +23,8 @@ type Character struct {
 func (c *Character) initCharacter(name string, class string) {
 	c.Name = name
 	c.Classe = class
+	c.LimitInventaire = 10
+	c.Money = 1000
 	switch c.Classe {
 	case "athénien ":
 		c.PvMax = 100

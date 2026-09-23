@@ -10,6 +10,7 @@ func (c *Character) MenuPrincipale() {
 		fmt.Println("=== Menu Principal ===")
 		fmt.Println("\t 1 - Afficher les informations du personnage")
 		fmt.Println("\t 2 - Accéder à l'inventaire")
+		fmt.Println("\t 3 - Accéder au shop")
 		fmt.Println("\t 0 - Retour à la carte")
 
 		fmt.Print("Votre choix : ")
@@ -23,6 +24,8 @@ func (c *Character) MenuPrincipale() {
 			c.displaylnfo()
 		case 2:
 			c.accessInventory()
+		case 3:
+			c.MarketMenu()
 		default:
 			fmt.Println("Choix invalide, veuillez réessayer.")
 		}
@@ -44,7 +47,7 @@ func (c *Character) Menutest() {
 		switch step1 {
 		case 1:
 			fmt.Println("Vous vous dirigez vers le Marché.")
-			c.MerchantMenu()
+			c.MarketMenu()
 		case 2:
 			fmt.Println("Vous vous dirigez vers la Tour.")
 
@@ -60,4 +63,3 @@ func (c *Character) Menutest() {
 		}
 	}
 }
-

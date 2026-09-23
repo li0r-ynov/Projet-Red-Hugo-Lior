@@ -2,30 +2,76 @@ package src
 
 import "fmt"
 
-func (c *Character) MerchantMenu() {
-	// afficher les objets du marchand
-	// demander le choix
-	// ajouter l'objet à l'inventaire
-	var chose int
-	for true {
-		fmt.Println("=== Marché ===")
-		fmt.Println("\t 1 - Marchand")
-		fmt.Println("\t 2 - Forgeron")
-		fmt.Println("\t 0 - Retour à la carte")
+func DisplayMarket() {
+	fmt.Println("=== Marché ===")
+	fmt.Println("\t 1 - potion de poison (10 piéce d'or)")
+	fmt.Println("\t 2 - potion d'ambroisie (5€)")
+	fmt.Println("\t potion de pâques")
+	fmt.Println("\t Le marchand vous offre une Potion d'ambroisie")
+	fmt.Println("\t Vous venez d'acheter une potion d'ambroisie")
+	fmt.Println("\t vous venez d'acheter une potion de poison hahaha !")
+	fmt.Println("\t Vous venez d'acheter une potion de pâques ")
+	fmt.Println("\t 0 - Retour à la carte")
+	fmt.Println("------------------------------")
+	fmt.Println("Votre choix ?")
+}
 
-		fmt.Print("Votre choix : ")
+func (c *Character) MarketMenu() {
+	for true {
+		DisplayMarket()
+		var chose int
 		fmt.Scan(&chose)
+
+		if chose != 0 && !c.CheckPlace() {
+			fmt.Println("\nImpossible pas de place dans l'inventaire....\n")
+			continue
+		}
 
 		switch chose {
 		case 1:
-			return
+			c.Moni(10)
 		case 2:
 			fmt.Println("Vous vous dirigez vers la Tour.")
 		case 0:
 			fmt.Println("alaide")
-			break
+			return
 		default:
 			fmt.Println("Choix invalide.")
 		}
 	}
+
 }
+
+/* func marketplace() {
+
+	if !c.PotionGratuiteRecuperee {
+		fmt.Println("\t1 - Potion d'ambroisie - GRATUITE")
+	} else {
+		fmt.Println("\t1 - Potion d'ambroisie - 3 pièces d'or")
+	}
+
+	fmt.Println("\t0 - Retour")
+
+	fmt.Print("Votre choix : ")
+	var choice int
+	fmt.Scan(&choice)
+
+	switch choice {
+	case 1:
+		if !c.PotionGratuiteRecuperee {
+			c.Inventaire[PotionSoin]++
+			c.PotionGratuiteRecuperee = true
+
+			fmt.Println("Le marchand vous offre une Potion d'ambroisie !")
+		} else {
+			fmt.Println("La Potion d'ambroisie coûte maintenant 3 pièces d'or.")
+			// Le système d'argent sera ajouté avec la tâche 13/14.
+		}
+
+	case 0:
+		return
+
+	default:
+		fmt.Println("Choix invalide.")
+	}
+} */

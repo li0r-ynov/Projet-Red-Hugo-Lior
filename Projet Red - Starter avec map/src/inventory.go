@@ -39,3 +39,12 @@ func (c *Character) Moni(cost int){
 		fmt.Println("Merci pour vos achats")
 	}
 }
+
+func (c *Character) CheckPlace() bool {
+	var itemsQuantity int = 0
+	for _, quantity := range c.Inventaire {
+		itemsQuantity += quantity
+	}
+
+	return itemsQuantity < c.LimitInventaire
+}
