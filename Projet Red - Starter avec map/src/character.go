@@ -55,7 +55,7 @@ func (c Character) displaylnfo() {
 	fmt.Printf("\t PV       : %d\n", c.Pv)
 	fmt.Printf("\t PV max   : %d\n", c.PvMax)
 	fmt.Printf("\t Inventaire : %d objet(s)\n", totalItems)
-	fmt.Println("\t Pièce d'or : %d", c.Money)
+	fmt.Println("\t Pièce d'or : %d", c.Moni)
 	fmt.Printf("Titre : %s\n", c.Level)
 	fmt.Printf("Renommée : %d\n", c.Renown)
 }
