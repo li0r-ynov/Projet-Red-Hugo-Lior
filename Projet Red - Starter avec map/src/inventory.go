@@ -30,13 +30,15 @@ func (c *Character) accessInventory() {
 	}
 }
 
-func (c *Character) Moni(cost int) {
-	if c.Money <= cost {
+func (c *Character) Moni(cost int) bool {
+	if c.Money < cost {
 		fmt.Println("T'as pas les tales clochard")
-	} else {
-		c.Money -= cost
-		fmt.Println("Merci pour vos achats")
+		return false
 	}
+
+	c.Money -= cost
+	fmt.Println("Merci pour votre achat")
+	return true
 }
 
 func (c *Character) CheckPlace() bool {
@@ -48,3 +50,10 @@ func (c *Character) CheckPlace() bool {
 	return itemsQuantity < c.LimitInventaire
 }
 
+func (c *Character) addinventory(item string, quantity int) {
+	if c.Inventaire == nil {
+		c.Inventaire = make(map[string]int)
+	}
+
+	c.Inventaire[item] += quantity
+}

@@ -16,6 +16,8 @@ type Character struct {
 	Renown                  int
 	PotionGratuiteRecuperee bool
 	LimitInventaire         int
+	Damage                  int
+	Vitesse                 int
 }
 
 // initCharacter initialise un personnage selon sa classe (PV max différents)
@@ -41,10 +43,11 @@ func (c *Character) initCharacter() {
 		PotionPoison: 0,
 		PotionPaques: 0,
 	}
+
 }
 
 // displaylnfo affiche les informations principales du personnage.
-func (c Character) displaylnfo() {
+func (c Character) displayInfo() {
 	totalItems := 0
 	for _, quantity := range c.Inventaire {
 		totalItems += quantity

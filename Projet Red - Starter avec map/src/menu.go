@@ -61,7 +61,7 @@ func (c *Character) MenuPrincipal() {
 		case 0:
 			return
 		case 1:
-			c.displaylnfo()
+			c.displayInfo()
 		case 2:
 			c.accessInventory()
 		case 3:

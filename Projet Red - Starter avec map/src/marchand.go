@@ -6,6 +6,11 @@ func (c *Character) DisplayMarket() {
 	fmt.Println("=== Marché ===")
 	fmt.Println("\t 1 - potion d'ambroisie (3 pièces d'or)")
 	fmt.Println("\t 2 - potion de poison (5 pièces d'or)")
+	fmt.Println("\t 3 - Dagues de l'Assassin' (5 pièces d'or)")
+	fmt.Println("\t 4 - Glaives du Légionnaire(5 pièces d'or)")
+	fmt.Println("\t 5 - Marteau de guerre du Martelier (5 pièces d'or)")
+	fmt.Println("\t 6 - Hache de Vikings (5 pièces d'or)")
+
 	fmt.Println("\t potion de pâques")
 
 	fmt.Println("\t 0 - Retour à la carte")
@@ -33,13 +38,32 @@ func (c *Character) MarketMenu() {
 		case 1:
 			if !c.PotionGratuiteRecuperee {
 				fmt.Println("\t Le marchand vous offre une Potion d'ambroisie")
+				c.addinventory("Potion d'ambroisie", 1)
 				c.PotionGratuiteRecuperee = true
 			} else {
-				fmt.Println("\t vous venez d'acheter une potion d'ambroisie")
+				fmt.Println("\t Vous venez d'acheter une potion d'ambroisie")
+				c.addinventory("Potion d'ambroisie", 1)
 				c.Moni(3)
 			}
 		case 2:
-			fmt.Println("\t vous venez d'acheter une potion de poison hahaha !")
+			fmt.Println("\t Vous venez d'acheter une potion de poison hahaha !")
+			c.addinventory("Potion de poison", 1)
+			c.Moni(5)
+		case 3:
+			fmt.Println("\t Vous venez d'acheter les Dagues d'Assassin !")
+			c.addinventory("Les Dagues d'Assassin", 1)
+			c.Moni(5)
+		case 4:
+			fmt.Println("\t Vous venez d'acheter la Hache de Viking !")
+			c.addinventory("La Hache de Viking", 1)
+			c.Moni(5)
+		case 5:
+			fmt.Println("\t Vous venez d'acheter le Marteau de Guerre du Martellier!")
+			c.addinventory("Le Marteau de Guerre du Martellier", 1)
+			c.Moni(5)
+		case 6:
+			fmt.Println("\t Vous venez d'acheter le Glaive du Légionnaire ")
+			c.addinventory("Le Glaive du Légionnaire", 1)
 			c.Moni(5)
 		case 0:
 			fmt.Println("alaide")
@@ -80,7 +104,6 @@ func (c *Character) MarketMenu() {
 
 	case 0:
 		return
-
 	default:
 		fmt.Println("Choix invalide.")
 	}
