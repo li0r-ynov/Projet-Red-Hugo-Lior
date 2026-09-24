@@ -14,31 +14,53 @@ func (c *Character) combat(adversaire opps) bool {
 			c.Name, c.Pv, adversaire.Name, adversaire.Pv,
 		)
 
-		fmt.Println("1 - Attaquer")
+		fmt.Println("1 - CDP")
+
+		nomAttaque := attaqueDeLArme(c.ArmeEquipee)
+		if nomAttaque != "" {
+			fmt.Printf("2 - %s (%s)\n", nomAttaque, c.ArmeEquipee)
+		}
+
 		fmt.Print("Votre choix : ")
 
 		var choix int
-		fmt.Scan(&choix)
+		if _, err := fmt.Scan(&choix); err != nil {
+			fmt.Println("Saisie invalide.")
+			return false
+		}
+
+		var degats int
+		var attaque string
 
 		switch choix {
 		case 1:
-			adversaire.Pv -= c.Damage
+			degats, _ = c.cdpStats()
+			attaque = "CDP"
 
-			if adversaire.Pv < 0 {
-				adversaire.Pv = 0
+		case 2:
+			if nomAttaque == "" {
+				fmt.Println("Vous n'avez pas d'attaque d'arme disponible.")
+				continue
 			}
 
-			fmt.Printf(
-				"Vous infligez %d dégâts. Il reste %d PV à %s.\n",
-				c.Damage, adversaire.Pv, adversaire.Name,
-			)
+			degats, _ = c.weaponStats()
+			attaque = nomAttaque
 
 		default:
 			fmt.Println("Choix invalide : vous ne perdez pas votre tour.")
 			continue
 		}
 
-		// L'adversaire ne joue pas s'il vient d'être vaincu.
+		adversaire.Pv -= degats
+		if adversaire.Pv < 0 {
+			adversaire.Pv = 0
+		}
+
+		fmt.Printf(
+			"%s inflige %d dégâts. Il reste %d PV à %s.\n",
+			attaque, degats, adversaire.Pv, adversaire.Name,
+		)
+
 		if adversaire.Pv == 0 {
 			break
 		}
@@ -58,6 +80,25 @@ func (c *Character) combat(adversaire opps) bool {
 	return true
 }
 
+func attaqueDeLArme(arme string) string {
+	switch arme {
+	case "Le Marteau de Guerre du Martelier":
+		return "Le coup du marteau"
+
+	case "Les Dagues de l'Assassin":
+		return "Entaillade"
+
+	case "Le Glaive du Légionnaire":
+		return "Lame sanglante"
+
+	case "La Hache de Viking":
+		return "Frappe de barbare"
+
+	default:
+		return ""
+	}
+}
+
 func (c *Character) dmg(damage int) {
 	c.Pv -= damage
 
@@ -66,8 +107,7 @@ func (c *Character) dmg(damage int) {
 	}
 }
 
-// isDead renvoie true uniquement si le joueur meurt après
-// avoir déjà utilisé sa résurrection pendant ce combat.
+// isDead renvoie true si la seconde chance a déjà été utilisée.
 func (c *Character) isDead(resurrectionUtilisee *bool) bool {
 	if c.Pv > 0 {
 		return false

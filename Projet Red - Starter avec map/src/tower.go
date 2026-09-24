@@ -19,7 +19,6 @@ func (c *Character) TowerTravelDisplay(
 }
 
 func (c *Character) MenuTour() {
-	// Le choix de direction n'est proposé qu'à la première visite.
 	for c.DirectionTour == "" {
 		fmt.Println("\n=== Entrée de la tour ===")
 		fmt.Println("Choisissez votre voie. Ce choix est définitif.")
@@ -75,15 +74,17 @@ func (c *Character) MenuTour() {
 				return
 			}
 
-			victoire := c.combat(adversaire)
+			etageVaincu := c.EtageTour
 
-			if victoire {
-				c.EtageTour++
-				fmt.Println("Étage terminé ! Vous pouvez continuer ou retourner en ville.")
-			} else {
+			if !c.combat(adversaire) {
 				fmt.Println("Vous pourrez retenter cet étage plus tard.")
 				return
 			}
+
+			c.recompenseEtage(etageVaincu)
+			c.EtageTour++
+
+			fmt.Println("Étage terminé ! Vous pouvez continuer ou retourner en ville.")
 
 		default:
 			fmt.Println("Choix invalide.")
@@ -123,4 +124,49 @@ func adversaireEtage(direction string, etage int) string {
 	}
 
 	return ""
+}
+
+func (c *Character) recompenseEtage(etage int) {
+	seuils := []int{0, 100, 300, 700, 1500, 3100}
+	renommeeVoulue := seuils[etage]
+
+	if c.DirectionTour == "Descendre" {
+		renommeeVoulue = -renommeeVoulue
+	}
+
+	// ChangeRenown ajoute une quantité : on calcule la différence
+	// pour atteindre exactement le seuil voulu.
+	gain := renommeeVoulue - c.Renown
+	c.ChangeRenown(gain)
+
+	fmt.Printf("Votre titre est maintenant : %s.\n", c.Level)
+	fmt.Printf("Votre renommée est maintenant de %d.\n", c.Renown)
+
+	switch etage {
+	case 3:
+		c.donnerButin("Plume divine", 3)
+
+	case 4:
+		c.donnerButin("Essence divine", 2)
+	}
+}
+
+func (c *Character) donnerButin(nom string, quantite int) {
+	totalObjets := 0
+	for _, nombre := range c.Inventaire {
+		totalObjets += nombre
+	}
+
+	placeDisponible := c.LimitInventaire - totalObjets
+	if placeDisponible < quantite {
+		quantite = placeDisponible
+	}
+
+	if quantite <= 0 {
+		fmt.Printf("Votre inventaire est plein : impossible de récupérer %s.\n", nom)
+		return
+	}
+
+	c.addinventory(nom, quantite)
+	fmt.Printf("Butin obtenu : %s x%d.\n", nom, quantite)
 }
