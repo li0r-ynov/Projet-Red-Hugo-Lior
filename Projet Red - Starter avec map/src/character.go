@@ -6,17 +6,19 @@ import (
 
 // Character représente un personnage jouable avec ses points de vie et son inventaire.
 type Character struct {
-	Name       string
-	Classe     string
-	PvMax      int
-	Pv         int
-	Inventaire map[string]int
-	Money      int 
-	Level      string
-	Renown     int
+	Name                    string
+	Classe                  string
+	PvMax                   int
+	Pv                      int
+	Inventaire              map[string]int
+	Money                   int
+	Level                   string
+	Renown                  int
 	PotionGratuiteRecuperee bool
 	LimitInventaire         int
-	
+	Defence                 int
+	Damage                  int
+	Vitesse                 int
 }
 
 // initCharacter initialise un personnage selon sa classe (PV max différents)

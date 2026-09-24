@@ -47,3 +47,11 @@ func (c *Character) CheckPlace() bool {
 
 	return itemsQuantity < c.LimitInventaire
 }
+
+func (c *Character) addinventory(item string, quantity int) {
+	if c.Inventaire == nil {
+		c.Inventaire = make(map[string]int)
+	}
+
+	c.Inventaire[item] += quantity
+}
