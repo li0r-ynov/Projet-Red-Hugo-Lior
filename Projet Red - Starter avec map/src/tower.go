@@ -6,29 +6,34 @@ func (c *Character) TowerTravelDisplay(
 	text, textOption1, textOption2, textOption3, textOption4, textOption5 string,
 ) int {
 	fmt.Println(text)
-	fmt.Println("\t 1 - ", textOption1)
-	fmt.Println("\t 2 - ", textOption2)
-	fmt.Println("\t 3 - ", textOption3)
-	fmt.Println("\t 4 - ", textOption4)
-	fmt.Println("\t 0 - ", textOption5)
+	option("1", textOption1)
+	option("2", textOption2)
+	option("3", textOption3)
+	option("4", textOption4)
+	option("0", textOption5)
 	fmt.Print("Votre choix : ")
 
-	var loreChoice int
-	fmt.Scan(&loreChoice)
-	return loreChoice
+	var choix int
+	fmt.Scan(&choix)
+	return choix
 }
 
 func (c *Character) MenuTour() {
 	for c.DirectionTour == "" {
-		fmt.Println("\n=== Entrée de la tour ===")
-		fmt.Println("Choisissez votre voie. Ce choix est définitif.")
-		fmt.Println("1 - Monter")
-		fmt.Println("2 - Descendre")
-		fmt.Println("0 - Retourner en ville")
+		titreEcran("LA TOUR")
+		fmt.Printf("  %sDeux voies s'ouvrent devant vous.%s\n", blanc, reset)
+		fmt.Printf("  %sVotre choix sera définitif.%s\n", crimson, reset)
+		separateur()
+		option("1", "Monter vers l'Olympe")
+		option("2", "Descendre vers les Enfers")
+		option("0", "Retourner à Athènes")
 		fmt.Print("Votre choix : ")
 
 		var choix int
-		fmt.Scan(&choix)
+		if _, err := fmt.Scan(&choix); err != nil {
+			messageErreur("Saisie invalide.")
+			return
+		}
 
 		switch choix {
 		case 1:
@@ -38,31 +43,40 @@ func (c *Character) MenuTour() {
 		case 0:
 			return
 		default:
-			fmt.Println("Choix invalide.")
+			messageErreur("Choix invalide.")
 		}
 	}
 
 	for {
 		if c.EtageTour > 5 {
-			fmt.Println("Vous avez terminé les cinq combats de votre voie.")
+			titreEcran("VOIE TERMINÉE")
+			messageSucces("Vous avez remporté les cinq combats de votre voie.")
 			return
 		}
 
 		nomAdversaire := adversaireEtage(c.DirectionTour, c.EtageTour)
 		adversaire, existe := oppsdef[nomAdversaire]
+
 		if !existe {
-			fmt.Printf("Adversaire introuvable : %s\n", nomAdversaire)
+			messageErreur("Adversaire introuvable : " + nomAdversaire)
 			return
 		}
 
-		fmt.Printf("\n=== %s : étage %d ===\n", c.DirectionTour, c.EtageTour)
-		fmt.Printf("Adversaire : %s\n", adversaire.Name)
-		fmt.Println("1 - Commencer le combat")
-		fmt.Println("0 - Retourner en ville")
+		titreEcran("PARCOURS DE LA TOUR")
+		ligneTour("Voie", c.DirectionTour)
+		ligneTour("Étage", fmt.Sprintf("%d/5", c.EtageTour))
+		ligneTour("Adversaire", adversaire.Name)
+		separateur()
+
+		option("1", "Commencer le combat")
+		option("0", "Retourner à Athènes")
 		fmt.Print("Votre choix : ")
 
 		var choix int
-		fmt.Scan(&choix)
+		if _, err := fmt.Scan(&choix); err != nil {
+			messageErreur("Saisie invalide.")
+			return
+		}
 
 		switch choix {
 		case 0:
@@ -70,26 +84,31 @@ func (c *Character) MenuTour() {
 
 		case 1:
 			if c.Pv <= 0 {
-				fmt.Println("Vous devez récupérer des PV avant de combattre.")
+				messageErreur("Vous devez récupérer des PV avant de combattre.")
 				return
 			}
 
 			etageVaincu := c.EtageTour
 
 			if !c.combat(adversaire) {
-				fmt.Println("Vous pourrez retenter cet étage plus tard.")
+				messageErreur("Vous pourrez retenter cet étage plus tard.")
 				return
 			}
 
 			c.recompenseEtage(etageVaincu)
 			c.EtageTour++
-
-			fmt.Println("Étage terminé ! Vous pouvez continuer ou retourner en ville.")
+			messageSucces("Étage terminé ! Continuez ou retournez en ville.")
 
 		default:
-			fmt.Println("Choix invalide.")
+			messageErreur("Choix invalide.")
 		}
 	}
+}
+
+func ligneTour(nom, valeur string) {
+	fmt.Printf("  %s%-13s%s %s%s%s\n",
+		bleu, nom, reset,
+		blanc, valeur, reset)
 }
 
 func adversaireEtage(direction string, etage int) string {
@@ -134,20 +153,20 @@ func (c *Character) recompenseEtage(etage int) {
 		renommeeVoulue = -renommeeVoulue
 	}
 
-	// ChangeRenown ajoute une quantité : on calcule la différence
-	// pour atteindre exactement le seuil voulu.
-	gain := renommeeVoulue - c.Renown
-	c.ChangeRenown(gain)
+	c.ChangeRenown(renommeeVoulue - c.Renown)
 
-	fmt.Printf("Votre titre est maintenant : %s.\n", c.Level)
-	fmt.Printf("Votre renommée est maintenant de %d.\n", c.Renown)
+	sousTitre("RÉCOMPENSES")
+	ligneTour("Titre", c.Level)
+	ligneTour("Renommée", fmt.Sprintf("%d", c.Renown))
 
 	switch etage {
 	case 3:
-		c.donnerButin("Plume divine", 3)
+		// Héro sur la voie montante, Démon sur la voie descendante.
+		c.donnerButin("Plume divine", 2)
 
 	case 4:
-		c.donnerButin("Essence divine", 2)
+		// Demi-Dieu sur les deux voies.
+		c.donnerButin("Essence divine", 1)
 	}
 }
 
@@ -163,10 +182,10 @@ func (c *Character) donnerButin(nom string, quantite int) {
 	}
 
 	if quantite <= 0 {
-		fmt.Printf("Votre inventaire est plein : impossible de récupérer %s.\n", nom)
+		messageErreur("Inventaire plein : impossible de récupérer " + nom + ".")
 		return
 	}
 
 	c.addinventory(nom, quantite)
-	fmt.Printf("Butin obtenu : %s x%d.\n", nom, quantite)
+	messageSucces(fmt.Sprintf("Butin obtenu : %s x%d", nom, quantite))
 }

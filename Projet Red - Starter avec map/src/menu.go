@@ -6,62 +6,120 @@ import (
 	"unicode"
 )
 
-func (c *Character) MenuInitCharacter() {
-	var nom string
-	fmt.Print("Quel est votre nom jeune aventurier :\n")
-	fmt.Scan(&nom)
+func afficherTitre() {
+	fmt.Print(dore)
+	fmt.Println(`
+████████╗ ██████╗ ██╗    ██╗███████╗██████╗
+╚══██╔══╝██╔═══██╗██║    ██║██╔════╝██╔══██╗
+   ██║   ██║   ██║██║ █╗ ██║█████╗  ██████╔╝
+   ██║   ██║   ██║██║███╗██║██╔══╝  ██╔══██╗
+   ██║   ╚██████╔╝╚███╔███╔╝███████╗██║  ██║
+   ╚═╝    ╚═════╝  ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝`)
 
-	//met le nom au bon format
-	for _, caractere := range nom {
-		if !unicode.IsLetter(caractere) {
-			fmt.Println("nom invalide :  utilisez uniquement des lettres.")
-			c.MenuInitCharacter()
+	fmt.Print(blanc)
+	fmt.Println(`
+                         OF`)
+
+	fmt.Print(crimson)
+	fmt.Println(`
+██████╗ ██╗   ██╗ █████╗ ██╗     ██╗████████╗██╗   ██╗
+██╔══██╗██║   ██║██╔══██╗██║     ██║╚══██╔══╝╚██╗ ██╔╝
+██║  ██║██║   ██║███████║██║     ██║   ██║    ╚████╔╝
+██║  ██║██║   ██║██╔══██║██║     ██║   ██║     ╚██╔╝
+██████╔╝╚██████╔╝██║  ██║███████╗██║   ██║      ██║
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝   ╚═╝      ╚═╝`)
+	fmt.Print(reset)
+	fmt.Println()
+}
+
+func (c *Character) MenuInitCharacter() {
+	afficherTitre()
+	titreEcran("CRÉATION DU PERSONNAGE")
+
+	for {
+		fmt.Print("\nNom de votre aventurier : ")
+
+		var nom string
+		if _, err := fmt.Scan(&nom); err != nil {
+			messageErreur("Impossible de lire le nom.")
 			return
 		}
+
+		valide := true
+		for _, lettre := range nom {
+			if !unicode.IsLetter(lettre) {
+				valide = false
+				break
+			}
+		}
+
+		if !valide {
+			messageErreur("Utilisez uniquement des lettres.")
+			continue
+		}
+
+		lettres := []rune(strings.ToLower(nom))
+		lettres[0] = unicode.ToUpper(lettres[0])
+		c.Name = string(lettres)
+		break
 	}
-	nom = strings.ToLower(nom)
-	premierelettre := nom[:1]
-	reste := nom[1:]
-	premierelettre = strings.ToUpper(premierelettre)
-	nom = premierelettre + reste
-	c.Name = nom
-	fmt.Println("nom final :", c.Name)
 
-	var choiceType int
-	fmt.Println("1 - Sparte")
-	fmt.Println("2 - Athénien")
-	fmt.Scan(&choiceType)
+	for {
+		titreEcran("CHOISISSEZ VOTRE CLASSE")
+		option("1", "Sparte   • 60 PV max • 10 dégâts naturels")
+		option("2", "Athénien • 50 PV max • 15 dégâts naturels")
+		separateur()
+		fmt.Print("Votre choix : ")
 
-	switch choiceType {
-case 1:
-	c.Classe = "Sparte"
+		var choix int
+		if _, err := fmt.Scan(&choix); err != nil {
+			messageErreur("Saisie invalide.")
+			return
+		}
 
-case 2:
-	c.Classe = "Athénien"
+		switch choix {
+		case 1:
+			c.Classe = "Sparte"
+		case 2:
+			c.Classe = "Athénien"
+		default:
+			messageErreur("Choisissez 1 ou 2.")
+			continue
+		}
+		break
+	}
 
-default:
-	fmt.Println("Choix invalide.")
-	c.MenuInitCharacter()
-	return
-}
-c.initCharacter()
-c.Menutest()
+	c.initCharacter()
+
+	titreEcran("VOTRE AVENTURE COMMENCE")
+	fmt.Printf("  Nom    : %s\n", c.Name)
+	fmt.Printf("  Classe : %s\n", c.Classe)
+	fmt.Printf("  Titre  : %s\n", c.Level)
+	fmt.Printf("  PV     : %d/%d\n", c.Pv, c.PvMax)
+	separateur()
+	fmt.Println("  Deux voies vous attendent dans la tour.")
+
+	c.Menutest()
 }
 
 func (c *Character) MenuPrincipal() {
-
-	for true {
-		fmt.Println("=== Menu Principal ===")
-		fmt.Println("\t 1 - Afficher les informations du personnage")
-		fmt.Println("\t 2 - Accéder à l'inventaire")
-		fmt.Println("\t 3 - Accéder au shop")
-		fmt.Println("\t 0 - Retour à la carte")
-
+	for {
+		titreEcran("PERSONNAGE")
+		fmt.Printf("  %s • %s • %d/%d PV\n", c.Name, c.Level, c.Pv, c.PvMax)
+		separateur()
+		option("1", "Voir la fiche du personnage")
+		option("2", "Ouvrir l'inventaire")
+		option("3", "Aller au marché")
+		option("0", "Retourner à la carte")
 		fmt.Print("Votre choix : ")
-		var chose int
-		fmt.Scan(&chose)
 
-		switch chose {
+		var choix int
+		if _, err := fmt.Scan(&choix); err != nil {
+			messageErreur("Saisie invalide.")
+			return
+		}
+
+		switch choix {
 		case 0:
 			return
 		case 1:
@@ -71,42 +129,41 @@ func (c *Character) MenuPrincipal() {
 		case 3:
 			c.MarketMenu()
 		default:
-			fmt.Println("Choix invalide, veuillez réessayer.")
+			messageErreur("Choix invalide.")
 		}
 	}
 }
 
 func (c *Character) Menutest() {
 	for {
-		step1 := c.TowerTravelDisplay(
-			"Où souhaitez-vous vous rendre ?",
-			"Le Marché",
-			"La Tour",
-			"Les Maisons des Dieux",
-			"Menu Principal",
-			"Quitter le jeu",
-		)
+		titreEcran("CARTE D'ATHÈNES")
+		option("1", "Le Marché")
+		option("2", "La Tour")
+		option("3", "Les Maisons des Dieux")
+		option("4", "Menu du personnage")
+		option("0", "Quitter le jeu")
+		fmt.Print("Votre choix : ")
 
-		switch step1 {
+		var choix int
+		if _, err := fmt.Scan(&choix); err != nil {
+			messageErreur("Saisie invalide.")
+			return
+		}
+
+		switch choix {
 		case 1:
-			fmt.Println("Vous vous dirigez vers le Marché.")
 			c.MarketMenu()
-
 		case 2:
-    		fmt.Println("Vous vous dirigez vers la Tour.")
-    		c.MenuTour()
-
+			c.MenuTour()
 		case 3:
-			fmt.Println("Vous vous dirigez vers les Maisons des Dieux.")
-
+			fmt.Println("Les Maisons des Dieux ne sont pas encore accessibles.")
 		case 4:
 			c.MenuPrincipal()
-
 		case 0:
+			fmt.Println("À bientôt dans Tower of Duality.")
 			return
-
 		default:
-			fmt.Println("Choix invalide.")
+			messageErreur("Choix invalide.")
 		}
 	}
 }

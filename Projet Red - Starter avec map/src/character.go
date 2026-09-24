@@ -1,8 +1,6 @@
 package src
 
-import (
-	"fmt"
-)
+import "fmt"
 
 type Character struct {
 	Name                    string
@@ -19,111 +17,91 @@ type Character struct {
 	Vitesse                 int
 	ArmeEquipee             string
 	ArmuresEquipee          map[string]string
-	DirectionTour           string
-	EtageTour               int
+
+	DirectionTour  string
+	EtageTour      int
+	PalierPvAtteint int
 }
 
-// initCharacter initialise un personnage selon sa classe (PV max différents)
-// et lui donne un inventaire de départ.
 func (c *Character) initCharacter() {
 	c.LimitInventaire = 10
 
 	switch c.Classe {
 	case "Athénien":
 		c.PvMax = 50
-		c.Pv = c.PvMax / 2
-		c.Money = 10
 		c.Damage = 15
-		c.Vitesse = 10
-
 	case "Sparte":
 		c.PvMax = 60
-		c.Pv = c.PvMax / 2
-		c.Money = 10
 		c.Damage = 10
-		c.Vitesse = 10
 	}
 
+	c.Pv = c.PvMax / 2
+	c.Money = 10
+	c.Vitesse = 10
 	c.Level = "Civil"
 	c.Renown = 0
+	c.PalierPvAtteint = 0
+	c.DirectionTour = ""
+	c.EtageTour = 1
 
 	c.Inventaire = make(map[string]int)
 	c.ArmuresEquipee = make(map[string]string)
 	c.ArmeEquipee = ""
-	c.DirectionTour = ""
-	c.EtageTour = 1
 }
 
-// displaylnfo affiche les informations principales du personnage.
 func (c Character) displayInfo() {
-	totalItems := 0
-	for _, quantity := range c.Inventaire {
-		totalItems += quantity
+	totalObjets := 0
+	for _, quantite := range c.Inventaire {
+		totalObjets += quantite
 	}
 
-	fmt.Println("=== Fiche du personnage ===")
-	fmt.Printf("\t Nom      : %s\n", c.Name)
-	fmt.Printf("\t Classe   : %s\n", c.Classe)
-	fmt.Printf("\t PV       : %d\n", c.Pv)
-	fmt.Printf("\t PV max   : %d\n", c.PvMax)
-	fmt.Printf("\t Inventaire : %d objet(s)\n", totalItems)
-	fmt.Printf("\t Pièce d'or : %d\n", c.Money)
-	fmt.Printf("Titre : %s\n", c.Level)
-	fmt.Printf("Renommée : %d\n", c.Renown)
+	titreEcran("FICHE DU PERSONNAGE")
 
-	fmt.Println("=== Équipement ===")
+	sousTitre("IDENTITÉ")
+	ligneInfo("Nom", c.Name)
+	ligneInfo("Classe", c.Classe)
+	ligneInfo("Titre", c.Level)
+	ligneInfo("Renommée", fmt.Sprintf("%d", c.Renown))
 
-	if c.ArmeEquipee == "" {
-		fmt.Println("\t Arme équipée : Aucune")
-		fmt.Println("\t Attaque disponible : CDP")
-	} else {
-		fmt.Printf("\t Arme équipée : %s\n", c.ArmeEquipee)
-		fmt.Println("\t Attaque disponible : CDP")
+	sousTitre("RESSOURCES")
+	ligneInfo("Points de vie", fmt.Sprintf("%d/%d", c.Pv, c.PvMax))
+	ligneInfo("Pièces d'or", fmt.Sprintf("%d", c.Money))
+	ligneInfo("Inventaire", fmt.Sprintf("%d/%d", totalObjets, c.LimitInventaire))
+
+	sousTitre("ÉQUIPEMENT")
+	ligneInfo("Arme", equipmentName(c.ArmeEquipee))
+	ligneInfo("Casque", equipmentName(c.ArmuresEquipee["Casque"]))
+	ligneInfo("Plastron", equipmentName(c.ArmuresEquipee["Plastron"]))
+	ligneInfo("Bottes", equipmentName(c.ArmuresEquipee["Bottes"]))
+
+	sousTitre("COMBAT")
+	ligneInfo("Dégâts naturels", fmt.Sprintf("%d", c.Damage))
+	ligneInfo("Vitesse naturelle", fmt.Sprintf("%d", c.Vitesse))
+
+	degatsCDP, vitesseCDP := c.cdpStats()
+	ligneInfo("CDP", fmt.Sprintf("%d dégâts • %d vitesse", degatsCDP, vitesseCDP))
+
+	if c.ArmeEquipee != "" {
+		degatsArme, vitesseArme := c.weaponStats()
+		ligneInfo(
+			"Attaque d'arme",
+			fmt.Sprintf("%d dégâts • %d vitesse", degatsArme, vitesseArme),
+		)
 	}
 
-	fmt.Printf(
-		"\t Casque : %s\n",
-		equipmentName(c.ArmuresEquipee["Casque"]),
-	)
-
-	fmt.Printf(
-		"\t Plastron : %s\n",
-		equipmentName(c.ArmuresEquipee["Plastron"]),
-	)
-
-	fmt.Printf(
-		"\t Bottes : %s\n",
-		equipmentName(c.ArmuresEquipee["Bottes"]),
-	)
-
-	fmt.Println("=== Statistiques de combat ===")
-
-	fmt.Printf("\t Dégâts naturels   : %d\n", c.Damage)
-	fmt.Printf("\t Vitesse naturelle : %d\n", c.Vitesse)
-
-	cdpDamage, cdpVitesse := c.cdpStats()
-
-	fmt.Println("\t CDP :")
-	fmt.Printf("\t   Dégâts  : %d\n", cdpDamage)
-	fmt.Printf("\t   Vitesse : %d\n", cdpVitesse)
-
-	switch c.ArmeEquipee {
-	case "":
-		fmt.Println("\t Arme équipée : Aucune")
-
-	default:
-		weaponDamage, weaponVitesse := c.weaponStats()
-
-		fmt.Printf("\t %s :\n", c.ArmeEquipee)
-		fmt.Printf("\t   Dégâts  : %d\n", weaponDamage)
-		fmt.Printf("\t   Vitesse : %d\n", weaponVitesse)
-	}
+	separateur()
 }
 
-func equipmentName(itemName string) string {
-	if itemName == "" {
-		return "Vide"
+func ligneInfo(nom, valeur string) {
+	fmt.Printf("  %s%-19s%s %s%s%s\n",
+		bleu, nom, reset,
+		blanc, valeur, reset)
+}
+
+func equipmentName(nom string) string {
+	if nom == "" {
+		return "Aucun"
 	}
 
-	return itemName
+	return nom
 }

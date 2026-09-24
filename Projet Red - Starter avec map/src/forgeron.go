@@ -1,6 +1,9 @@
 package src
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type PlanFabrication struct {
 	Armure    string
@@ -52,55 +55,79 @@ var plansFabrication = []PlanFabrication{
 	},
 }
 
-func (c *Character) MenuForgeron() {
-	fmt.Println("\nLe forgeron vous présente ses plans de fabrication.")
+func afficherPlansFabrication() {
+	titreEcran("FORGERON")
+	fmt.Printf("  %sLe forgeron vous présente ses plans.%s\n", blanc, reset)
+	separateur()
+	sousTitre("PLANS DE FABRICATION")
 
-	for {
-		fmt.Println("\n=== Forgeron ===")
+	for i, plan := range plansFabrication {
+		fmt.Printf("  %s[%d]%s %s%s%s\n",
+			dore, i+1, reset,
+			bleu, plan.Armure, reset)
 
-		for i, plan := range plansFabrication {
-			fmt.Printf("%d - %s : ", i+1, plan.Armure)
+		fmt.Print("      ")
+		premier := true
 
-			for _, materiau := range []string{
-				"Fer", "Cuir", "Plume divine", "Essence divine",
-			} {
-				if quantite := plan.Materiaux[materiau]; quantite > 0 {
-					fmt.Printf("%s x%d  ", materiau, quantite)
-				}
+		for _, nom := range []string{
+			"Fer", "Cuir", "Plume divine", "Essence divine",
+		} {
+			quantite := plan.Materiaux[nom]
+			if quantite == 0 {
+				continue
 			}
 
-			fmt.Println()
+			if !premier {
+				fmt.Print("  •  ")
+			}
+
+			fmt.Printf("%s%s x%d%s", blanc, nom, quantite, reset)
+			premier = false
 		}
 
-		fmt.Println("0 - Retourner au marché")
-		fmt.Print("Équipement à fabriquer : ")
+		fmt.Println()
+	}
 
-		var choix int
+	fmt.Println()
+	option("M", "Revoir les plans")
+	option("0", "Retourner au marché")
+}
+
+func (c *Character) MenuForgeron() {
+	afficherPlansFabrication()
+
+	for {
+		fmt.Print("\nArmure à fabriquer (M : plans, 0 : retour) : ")
+
+		var choix string
 		if _, err := fmt.Scan(&choix); err != nil {
-			fmt.Println("Saisie invalide.")
+			messageErreur("Saisie invalide.")
 			return
 		}
 
-		if choix == 0 {
+		switch strings.ToUpper(choix) {
+		case "0":
 			return
+		case "M":
+			afficherPlansFabrication()
+		case "1", "2", "3", "4", "5", "6":
+			numero := int(choix[0] - '1')
+			c.fabriquerArmure(plansFabrication[numero])
+		default:
+			messageErreur("Choix invalide. Entrez un numéro, M ou 0.")
 		}
-
-		if choix < 1 || choix > len(plansFabrication) {
-			fmt.Println("Choix invalide.")
-			continue
-		}
-
-		c.fabriquerArmure(plansFabrication[choix-1])
 	}
 }
 
 func (c *Character) fabriquerArmure(plan PlanFabrication) {
-	for materiau, quantite := range plan.Materiaux {
-		if c.Inventaire[materiau] < quantite {
-			fmt.Printf(
-				"Matériau manquant : %s x%d (vous en avez %d).\n",
-				materiau, quantite, c.Inventaire[materiau],
-			)
+	for nom, necessaire := range plan.Materiaux {
+		possede := c.Inventaire[nom]
+
+		if possede < necessaire {
+			messageErreur(fmt.Sprintf(
+				"Il manque %s : %d/%d.",
+				nom, possede, necessaire,
+			))
 			return
 		}
 	}
@@ -116,19 +143,27 @@ func (c *Character) fabriquerArmure(plan PlanFabrication) {
 	}
 
 	if totalObjets-materiauxConsommes+1 > c.LimitInventaire {
-		fmt.Println("Votre inventaire sera plein après la fabrication.")
+		messageErreur("Votre inventaire sera plein après la fabrication.")
 		return
 	}
 
-	for materiau, quantite := range plan.Materiaux {
-		c.Inventaire[materiau] -= quantite
-
-		if c.Inventaire[materiau] == 0 {
-			delete(c.Inventaire, materiau)
+	for nom, quantite := range plan.Materiaux {
+		c.Inventaire[nom] -= quantite
+		if c.Inventaire[nom] == 0 {
+			delete(c.Inventaire, nom)
 		}
 	}
 
 	c.addinventory(plan.Armure, 1)
-	fmt.Printf("%s a été fabriqué !\n", plan.Armure)
+
+	switch plan.Armure {
+	case "Bottes de Gladiateur", "Bottes de Hermès":
+		messageSucces(plan.Armure + " ont été fabriquées !")
+	case "Ailes d'Icare":
+		messageSucces(plan.Armure + " ont été fabriquées !")
+	default:
+		messageSucces(plan.Armure + " a été fabriqué !")
+	}
+
 	c.equipArmor(plan.Armure)
 }
