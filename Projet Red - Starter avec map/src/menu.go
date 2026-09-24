@@ -33,12 +33,17 @@ func (c *Character) MenuInitCharacter() {
 	fmt.Scan(&choiceType)
 
 	switch choiceType {
+case 1:
+	c.Classe = "Sparte"
 
-	case 1:
-		c.Classe = "Sparte"
-	case 2:
-		c.Classe = "Athénien"
-	}
+case 2:
+	c.Classe = "Athénien"
+
+default:
+	fmt.Println("Choix invalide.")
+	c.MenuInitCharacter()
+	return
+}
 	c.initCharacter()
 	// fmt.Println(choiceType)
 	c.MenuPrincipal()
@@ -73,21 +78,21 @@ func (c *Character) MenuPrincipal() {
 }
 
 func (c *Character) Menutest() {
-	c.initCharacter()
-	for true {
+	for {
 		step1 := c.TowerTravelDisplay(
 			"Où souhaitez-vous vous rendre ?",
 			"Le Marché",
 			"La Tour",
 			"Les Maisons des Dieux",
 			"Menu Principal",
-			"quitter le jeu",
+			"Quitter le jeu",
 		)
 
 		switch step1 {
 		case 1:
 			fmt.Println("Vous vous dirigez vers le Marché.")
 			c.MarketMenu()
+
 		case 2:
 			fmt.Println("Vous vous dirigez vers la Tour.")
 
@@ -96,8 +101,10 @@ func (c *Character) Menutest() {
 
 		case 4:
 			c.MenuPrincipal()
+
 		case 0:
 			return
+
 		default:
 			fmt.Println("Choix invalide.")
 		}

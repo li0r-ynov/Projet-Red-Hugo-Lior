@@ -4,7 +4,6 @@ import (
 	"fmt"
 )
 
-// Character représente un personnage jouable avec ses points de vie et son inventaire.
 type Character struct {
 	Name                    string
 	Classe                  string
@@ -16,35 +15,40 @@ type Character struct {
 	Renown                  int
 	PotionGratuiteRecuperee bool
 	LimitInventaire         int
+	UpgradeCount            int
 	Damage                  int
 	Vitesse                 int
+	ArmeEquipee             string
+	ArmuresEquipee          map[string]string
 }
 
 // initCharacter initialise un personnage selon sa classe (PV max différents)
 // et lui donne un inventaire de départ.
 func (c *Character) initCharacter() {
+	c.LimitInventaire = 10
+
 	switch c.Classe {
 	case "Athénien":
-		c.PvMax = 60
-		c.Pv = c.PvMax / 2
-		c.Money = 100
-		c.Level = "Civil"
-		c.Renown = 0
-		c.LimitInventaire = 10
-	case "Sparte":
 		c.PvMax = 50
 		c.Pv = c.PvMax / 2
 		c.Money = 100
-		c.Level = "Civil"
-		c.Renown = 0
-		c.LimitInventaire = 10
-	}
-	c.Inventaire = map[string]int{
-		PotionSoin:   0,
-		PotionPoison: 0,
-		PotionPaque:  0,
+		c.Damage = 15
+		c.Vitesse = 10
+
+	case "Sparte":
+		c.PvMax = 60
+		c.Pv = c.PvMax / 2
+		c.Money = 100
+		c.Damage = 10
+		c.Vitesse = 10
 	}
 
+	c.Level = "Civil"
+	c.Renown = 0
+
+	c.Inventaire = make(map[string]int)
+	c.ArmuresEquipee = make(map[string]string)
+	c.ArmeEquipee = ""
 }
 
 // displaylnfo affiche les informations principales du personnage.
@@ -63,10 +67,69 @@ func (c Character) displayInfo() {
 	fmt.Printf("\t Pièce d'or : %d\n", c.Money)
 	fmt.Printf("Titre : %s\n", c.Level)
 	fmt.Printf("Renommée : %d\n", c.Renown)
+
+	fmt.Println("=== Équipement ===")
+
+	if c.ArmeEquipee == "" {
+		fmt.Println("\t Arme équipée : Aucune")
+		fmt.Println("\t Attaque disponible : CDP")
+	} else {
+		fmt.Printf("\t Arme équipée : %s\n", c.ArmeEquipee)
+		fmt.Println("\t Attaque disponible : CDP")
+	}
+
+	fmt.Printf(
+		"\t Casque : %s\n",
+		equipmentName(c.ArmuresEquipee["Casque"]),
+	)
+
+	fmt.Printf(
+		"\t Plastron : %s\n",
+		equipmentName(c.ArmuresEquipee["Plastron"]),
+	)
+
+	fmt.Printf(
+		"\t Bottes : %s\n",
+		equipmentName(c.ArmuresEquipee["Bottes"]),
+	)
+
+	fmt.Println("=== Statistiques de combat ===")
+
+	fmt.Printf("\t Dégâts naturels   : %d\n", c.Damage)
+	fmt.Printf("\t Vitesse naturelle : %d\n", c.Vitesse)
+
+	cdpDamage, cdpVitesse := c.cdpStats()
+
+	fmt.Println("\t CDP :")
+	fmt.Printf("\t   Dégâts  : %d\n", cdpDamage)
+	fmt.Printf("\t   Vitesse : %d\n", cdpVitesse)
+
+	switch c.ArmeEquipee {
+	case "":
+		fmt.Println("\t Arme équipée : Aucune")
+
+	default:
+		weaponDamage, weaponVitesse := c.weaponStats()
+
+		fmt.Printf("\t %s :\n", c.ArmeEquipee)
+		fmt.Printf("\t   Dégâts  : %d\n", weaponDamage)
+		fmt.Printf("\t   Vitesse : %d\n", weaponVitesse)
+	}
 }
 
-func (c *Character) isDead() bool {
+func equipmentName(itemName string) string {
+	if itemName == "" {
+		return "Vide"
+	}
 
-	return c.Pv <= 0
+	return itemName
+}
 
+func (c *Character) UpgradeInventorySlot() bool {
+	if c.UpgradeCount < 3 {
+		c.LimitInventaire += 10
+		c.UpgradeCount++
+		return true
+	}
+	return false
 }

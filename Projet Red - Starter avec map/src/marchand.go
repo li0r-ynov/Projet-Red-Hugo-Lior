@@ -4,14 +4,18 @@ import "fmt"
 
 func (c *Character) DisplayMarket() {
 	fmt.Println("=== Marché ===")
-	fmt.Println("\t 1 - Potion d'Ambroisie (3 pièces d'or)")
-	fmt.Println("\t 2 - Potion de Poison (5 pièces d'or)")
-	fmt.Println("\t 3 - Potion de Pâque (5 pièces d'or)")
-	fmt.Println("\t 4 - Dagues de l'Assassin (5 pièces d'or)")
-	fmt.Println("\t 5 - Glaive du Légionnaire(5 pièces d'or)")
-	fmt.Println("\t 6 - Marteau de guerre du Martelier (5 pièces d'or)")
-	fmt.Println("\t 7 - Hache de Vikings (5 pièces d'or)")
-	fmt.Println("\t 0 - Retour menu principal")
+	fmt.Println("\t 1 - La potion d'ambroisie (3 pièces d'or)")
+	fmt.Println("\t 2 - La potion de poison (5 pièces d'or)")
+	fmt.Println("\t 3 - La potion de Pâque (5 pièces d'or)")
+	fmt.Println("\t 4 - Les Dagues de l'Assassin (5 pièces d'or)")
+	fmt.Println("\t 5 - Le Glaive du Légionnaire(5 pièces d'or)")
+	fmt.Println("\t 6 - Le Marteau de guerre du Martelier (5 pièces d'or)")
+	fmt.Println("\t 7 - Le Hache de Vikings (5 pièces d'or)")
+	fmt.Println("\t 8 - Augmentation d'inventaire +10 places (30 pièces d'or)")
+
+	fmt.Println("\t potion de pâques")
+
+	fmt.Println("\t 0 - Retour à la carte")
 	fmt.Printf("\t Pièces d'or : %d\n", c.Money)
 	fmt.Println("------------------------------")
 	fmt.Println("Votre choix ?")
@@ -28,9 +32,10 @@ func (c *Character) DisplayMarket() {
 */
 
 func acheter(c *Character, nomObjet string, prix int) {
-	if c.addInventory(nomObjet, 1){
-	fmt.Println("\t Vous venez d'acheter", nomObjet)
-	c.Moni(prix)}
+	if c.addInventory(nomObjet, 1) {
+		fmt.Println("\t Vous venez d'acheter", nomObjet)
+		c.Moni(prix)
+	}
 }
 
 func (c *Character) MarketMenu() {
@@ -53,7 +58,7 @@ func (c *Character) MarketMenu() {
 			acheter(c, "Potion de poison", 5)
 
 		case 3:
-			acheter(c, "Potion de pâque", 5)
+			acheter(c, "Potion de Pâque", 5)
 
 		case 4:
 			acheter(c, "Les Dagues de l'Assasin", 5)
@@ -66,6 +71,18 @@ func (c *Character) MarketMenu() {
 
 		case 7:
 			acheter(c, "La Hache de Vikings", 5)
+
+		case 8:
+			if c.Money >=30 {
+				if c.UpgradeInventorySlot(){
+				c.Moni(30)
+				fmt.Println("\t Votre inventaire à été augmenté de 10 places !")
+			}else{
+				fmt.Println("\t Vous avez déjà utilisé les 3 amélioratiosn d'inventaire.")
+			}
+		}else{
+			fmt.Println("\t Vous 'avez pas assez de pièces d'or.")
+		}
 		case 0:
 			return
 		default:
