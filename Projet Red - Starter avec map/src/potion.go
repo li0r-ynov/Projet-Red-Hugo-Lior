@@ -8,7 +8,8 @@ import("fmt")
 const (
 	PotionSoin   = "Potion d'ambroisie"
 	PotionPoison = "Potion de poison"
-	PotionPaques = "Potion de pâques"
+	PotionPaque = "Potion de pâque"
+	
 )
 
 // takePot consomme une potion pour soigner ou activer la potion choisie.
@@ -21,7 +22,7 @@ func (c *Character) takePot(potionChoice int) {
 	case 2:
 		potionName = PotionPoison
 	case 3:
-		potionName = PotionPaques
+		potionName = PotionPaque
 	default:
 		fmt.Println("Choix invalide.")
 		return
@@ -34,13 +35,13 @@ func (c *Character) takePot(potionChoice int) {
 	}
 
 	if potQuantity <= 0 {
-		fmt.Println("Il ne vous reste plus de potion disponible.")
+		fmt.Println("Il ne vous reste plus de potions disponible.")
 		return
 	}
 
 	switch potionChoice {
 	case 1:
-		c.Pv += 50
+		c.Pv += 30
 		if c.Pv > c.PvMax {
 			c.Pv = c.PvMax
 		}
@@ -48,11 +49,14 @@ func (c *Character) takePot(potionChoice int) {
 	case 2:
 		fmt.Println("Potion de poison utilisée, la potion va maintenant infligé 10 points de vie de dégats par seconde pendant 3 sec")
 	case 3:
-		fmt.Println("Vous venez d'acheter une potion de pâques ")
+		fmt.Println("Potion de pâque utilisée, vous venez de débloquer quelque chose... ")
 	}
 
-	c.Inventaire[potionName]--
-	if c.Inventaire[potionName] <= 0 {
-		delete(c.Inventaire, potionName)
-	}
+	c.removeInventory(potionName, 1)
+
+
+	// c.Inventaire[potionName]--
+	// if c.Inventaire[potionName] <= 0 {
+	// 	delete(c.Inventaire, potionName)
+	// }
 }

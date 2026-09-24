@@ -4,16 +4,14 @@ import "fmt"
 
 func (c *Character) DisplayMarket() {
 	fmt.Println("=== Marché ===")
-	fmt.Println("\t 1 - potion d'ambroisie (3 pièces d'or)")
-	fmt.Println("\t 2 - potion de poison (5 pièces d'or)")
-	fmt.Println("\t 3 - Dagues de l'Assassin' (5 pièces d'or)")
-	fmt.Println("\t 4 - Glaives du Légionnaire(5 pièces d'or)")
-	fmt.Println("\t 5 - Marteau de guerre du Martelier (5 pièces d'or)")
-	fmt.Println("\t 6 - Hache de Vikings (5 pièces d'or)")
-
-	fmt.Println("\t potion de pâques")
-
-	fmt.Println("\t 0 - Retour à la carte")
+	fmt.Println("\t 1 - Potion d'Ambroisie (3 pièces d'or)")
+	fmt.Println("\t 2 - Potion de Poison (5 pièces d'or)")
+	fmt.Println("\t 3 - Potion de Pâque (5 pièces d'or)")
+	fmt.Println("\t 4 - Dagues de l'Assassin (5 pièces d'or)")
+	fmt.Println("\t 5 - Glaive du Légionnaire(5 pièces d'or)")
+	fmt.Println("\t 6 - Marteau de guerre du Martelier (5 pièces d'or)")
+	fmt.Println("\t 7 - Hache de Vikings (5 pièces d'or)")
+	fmt.Println("\t 0 - Retour menu principal")
 	fmt.Printf("\t Pièces d'or : %d\n", c.Money)
 	fmt.Println("------------------------------")
 	fmt.Println("Votre choix ?")
@@ -28,6 +26,13 @@ func (c *Character) DisplayMarket() {
 	c.Moni(10)
 }
 */
+
+func acheter(c *Character, nomObjet string, prix int) {
+	if c.addInventory(nomObjet, 1){
+	fmt.Println("\t Vous venez d'acheter", nomObjet)
+	c.Moni(prix)}
+}
+
 func (c *Character) MarketMenu() {
 	for true {
 		c.DisplayMarket()
@@ -35,38 +40,33 @@ func (c *Character) MarketMenu() {
 		fmt.Scan(&chose)
 
 		switch chose {
+
 		case 1:
 			if !c.PotionGratuiteRecuperee {
 				fmt.Println("\t Le marchand vous offre une Potion d'ambroisie")
-				c.addinventory("Potion d'ambroisie", 1)
+				c.addInventory("Potion d'ambroisie", 1)
 				c.PotionGratuiteRecuperee = true
 			} else {
-				fmt.Println("\t Vous venez d'acheter une potion d'ambroisie")
-				c.addinventory("Potion d'ambroisie", 1)
-				c.Moni(3)
+				acheter(c, "Potion d'ambroisie", 3)
 			}
 		case 2:
-			fmt.Println("\t Vous venez d'acheter une potion de poison hahaha !")
-			c.addinventory("Potion de poison", 1)
-			c.Moni(5)
+			acheter(c, "Potion de poison", 5)
+
 		case 3:
-			fmt.Println("\t Vous venez d'acheter les Dagues d'Assassin !")
-			c.addinventory("Les Dagues d'Assassin", 1)
-			c.Moni(5)
+			acheter(c, "Potion de pâque", 5)
+
 		case 4:
-			fmt.Println("\t Vous venez d'acheter la Hache de Viking !")
-			c.addinventory("La Hache de Viking", 1)
-			c.Moni(5)
+			acheter(c, "Les Dagues de l'Assasin", 5)
+
 		case 5:
-			fmt.Println("\t Vous venez d'acheter le Marteau de Guerre du Martellier!")
-			c.addinventory("Le Marteau de Guerre du Martellier", 1)
-			c.Moni(5)
+			acheter(c, "Le Glaive du Légionnaire", 5)
+
 		case 6:
-			fmt.Println("\t Vous venez d'acheter le Glaive du Légionnaire ")
-			c.addinventory("Le Glaive du Légionnaire", 1)
-			c.Moni(5)
+			acheter(c, "Le Marteau de Guerre du Martellier", 5)
+
+		case 7:
+			acheter(c, "La Hache de Vikings", 5)
 		case 0:
-			fmt.Println("alaide")
 			return
 		default:
 			fmt.Println("Choix invalide.")

@@ -42,7 +42,9 @@ func (c *Character) Moni(cost int) bool {
 }
 
 func (c *Character) CheckPlace() bool {
+
 	var itemsQuantity int = 0
+
 	for _, quantity := range c.Inventaire {
 		itemsQuantity += quantity
 	}
@@ -50,10 +52,24 @@ func (c *Character) CheckPlace() bool {
 	return itemsQuantity < c.LimitInventaire
 }
 
-func (c *Character) addinventory(item string, quantity int) {
+func (c *Character) addInventory(item string, quantity int) bool {
 	if c.Inventaire == nil {
 		c.Inventaire = make(map[string]int)
 	}
 
+	if !c.CheckPlace() {
+		fmt.Println("Inventaire plein !")
+		return false
+	}
+
 	c.Inventaire[item] += quantity
+	return true
+}
+
+func (c *Character) removeInventory(item string, quantity int) {
+	if c.Inventaire == nil {
+		c.Inventaire = make(map[string]int)
+	}
+
+	c.Inventaire[item] -= quantity
 }

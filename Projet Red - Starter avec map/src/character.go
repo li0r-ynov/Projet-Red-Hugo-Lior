@@ -23,25 +23,26 @@ type Character struct {
 // initCharacter initialise un personnage selon sa classe (PV max différents)
 // et lui donne un inventaire de départ.
 func (c *Character) initCharacter() {
-	c.LimitInventaire = 10
 	switch c.Classe {
 	case "Athénien":
 		c.PvMax = 60
 		c.Pv = c.PvMax / 2
-		c.Money = 10
+		c.Money = 100
 		c.Level = "Civil"
 		c.Renown = 0
+		c.LimitInventaire = 10
 	case "Sparte":
 		c.PvMax = 50
 		c.Pv = c.PvMax / 2
-		c.Money = 10
+		c.Money = 100
 		c.Level = "Civil"
 		c.Renown = 0
+		c.LimitInventaire = 10
 	}
 	c.Inventaire = map[string]int{
 		PotionSoin:   0,
 		PotionPoison: 0,
-		PotionPaques: 0,
+		PotionPaque:  0,
 	}
 
 }
@@ -62,4 +63,11 @@ func (c Character) displayInfo() {
 	fmt.Printf("\t Pièce d'or : %d\n", c.Money)
 	fmt.Printf("Titre : %s\n", c.Level)
 	fmt.Printf("Renommée : %d\n", c.Renown)
+}
+
+func (c *Character) isDead() bool {
+	if c.Pv <= 0 {
+		return true
+	}
+	return false
 }

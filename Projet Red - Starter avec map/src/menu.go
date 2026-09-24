@@ -51,7 +51,7 @@ func (c *Character) MenuPrincipal() {
 		fmt.Println("\t 1 - Afficher les informations du personnage")
 		fmt.Println("\t 2 - Accéder à l'inventaire")
 		fmt.Println("\t 3 - Accéder au shop")
-		fmt.Println("\t 0 - Retour à la carte")
+		fmt.Println("\t 0 - sortir du jeu")
 
 		fmt.Print("Votre choix : ")
 		var chose int
