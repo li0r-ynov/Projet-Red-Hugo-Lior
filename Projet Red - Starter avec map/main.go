@@ -1,8 +1,8 @@
 package main
 
-import projet_red "projet_red/src"
-// main lance le jeu : création du personnage puis boucle sur le menu principal.
+import "towerofduality/src"
+
 func main() {
-	var c projet_red.Character
-	c.MenuInitCharacter()
+	var personnage src.Character
+	personnage.MenuInitCharacter()
 }

@@ -1,58 +1,33 @@
 package src
 
-import("fmt")
+import "fmt"
 
-
-
-// Noms des objets de l'inventaire, utilisés comme clés dans la map.
 const (
-	PotionSoin   = "Potion d'ambroisie"
+	PotionSoin = "Potion d'ambroisie"
 	PotionPoison = "Potion de poison"
-	PotionPaques = "Potion de pâques"
+	PotionPaque = "Potion de Pâques"
 )
 
-// takePot consomme une potion pour soigner ou activer la potion choisie.
-func (c *Character) takePot(potionChoice int) {
-	var potionName string
-
-	switch potionChoice {
-	case 1:
-		potionName = PotionSoin
-	case 2:
-		potionName = PotionPoison
+func (c *Character) takePot(choix int) {
+	var nom string
+	switch choix {
+	case 1: nom = PotionSoin
+	case 2: nom = PotionPoison
 	case 3:
-		potionName = PotionPaques
-	default:
-		fmt.Println("Choix invalide.")
+		messageErreur("La potion de Pâques s'utilise dans une Maison des Dieux.")
 		return
+	default: messageErreur("Choix invalide."); return
 	}
-
-	potQuantity, potCheck := c.Inventaire[potionName]
-	if !potCheck {
-		fmt.Printf("Vous n'avez aucune %s dans votre inventaire.\n", potionName)
-		return
-	}
-
-	if potQuantity <= 0 {
-		fmt.Println("Il ne vous reste plus de potion disponible.")
-		return
-	}
-
-	switch potionChoice {
+	if c.Inventaire[nom] == 0 { messageErreur("Vous ne possédez pas cet objet."); return }
+	switch choix {
 	case 1:
-		c.Pv += 50
-		if c.Pv > c.PvMax {
-			c.Pv = c.PvMax
-		}
-		fmt.Printf("Potion d'ambroisie utilisée ! Vous avez maintenant %d/%d PV.\n", c.Pv, c.PvMax)
+		if c.Pv >= c.PvMax { messageErreur("Vous avez déjà tous vos PV."); return }
+		c.Pv += 30
+		if c.Pv > c.PvMax { c.Pv = c.PvMax }
+		c.removeInventory(nom, 1)
+		messageSucces(fmt.Sprintf("Ambroisie utilisée : %d/%d PV.", c.Pv, c.PvMax))
 	case 2:
-		fmt.Println("Potion de poison utilisée, la potion va maintenant infligé 10 points de vie de dégats par seconde pendant 3 sec")
-	case 3:
-		fmt.Println("Vous venez d'acheter une potion de pâques ")
-	}
-
-	c.Inventaire[potionName]--
-	if c.Inventaire[potionName] <= 0 {
-		delete(c.Inventaire, potionName)
+		// L'effet sur un ennemi doit être défini avec le système de combat.
+		messageErreur("Le poison ne peut pas encore être utilisé hors combat.")
 	}
 }

@@ -1,3 +1,3 @@
-module projet_red
+module towerofduality
 
-go 1.27.1
+go 1.22

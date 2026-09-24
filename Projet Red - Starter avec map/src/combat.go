@@ -5,158 +5,86 @@ import (
 	"strings"
 )
 
-// combat renvoie true si le joueur gagne, false s'il perd.
+func attaqueDeLArme(nom string) string {
+	switch nom {
+	case "Les Dagues de l'Assassin": return "Entaillade"
+	case "La Hache de Viking": return "Frappe de barbare"
+	case "Le Marteau de Guerre du Martelier": return "Le coup du marteau"
+	case "Le Glaive du Légionnaire": return "Lame sanglante"
+	case "La Foudre de Zeus": return "Foudre divine"
+	case "Le Trident de Poséidon": return "Tsunami"
+	case "Le Bident d'Hadès": return "Feu des Enfers"
+	default: return ""
+	}
+}
+
+// combat retourne true en cas de victoire. Les PV sont restaurés à la fin.
 func (c *Character) combat(adversaire opps) bool {
 	resurrectionUtilisee := false
 	tour := 1
-
-	titreEcran("COMBAT")
-	fmt.Printf("  %sAdversaire%s : %s%s%s\n",
-		crimson, reset, bleu, adversaire.Name, reset)
-
+	titreEcran("COMBAT CONTRE " + adversaire.Name)
 	for c.Pv > 0 && adversaire.Pv > 0 {
-		degatsCDP, _ := c.cdpStats()
-		nomAttaqueArme := attaqueDeLArme(c.ArmeEquipee)
-
 		titreEcran(fmt.Sprintf("TOUR %d", tour))
-
-		fmt.Printf("  %s%-20s%s %s%d/%d PV%s\n",
-			bleu, c.Name, reset, blanc, c.Pv, c.PvMax, reset)
-
-		fmt.Printf("  %s%-20s%s %s%d/%d PV%s\n",
-			bleu, adversaire.Name, reset,
-			blanc, adversaire.Pv, adversaire.PvMax, reset)
-
+		ligneInfo(c.Name, fmt.Sprintf("%d/%d PV", c.Pv, c.PvMax))
+		ligneInfo(adversaire.Name, fmt.Sprintf("%d/%d PV", adversaire.Pv, adversaire.PvMax))
 		separateur()
 		sousTitre("ATTAQUES")
-
-		fmt.Printf("  %s[A]%s %sCDP%s — %s%d dégâts%s\n",
-			dore, reset, bleu, reset, blanc, degatsCDP, reset)
-
-		if nomAttaqueArme != "" {
+		degatsCDP, _ := c.cdpStats()
+		fmt.Printf("  %s[A]%s %sCDP%s — %s%d dégâts%s\n", dore, reset, bleu, reset, blanc, degatsCDP, reset)
+		nomArme := attaqueDeLArme(c.ArmeEquipee)
+		if nomArme != "" {
 			degatsArme, _ := c.weaponStats()
-			fmt.Printf("  %s[E]%s %s%s%s — %s%d dégâts%s\n",
-				dore, reset,
-				bleu, nomAttaqueArme, reset,
-				blanc, degatsArme, reset)
-		} else {
-			fmt.Printf("  %s[E]%s %sAucune arme équipée%s\n",
-				dore, reset, gris, reset)
-		}
-
+			fmt.Printf("  %s[E]%s %s%s%s — %s%d dégâts%s\n", dore, reset, bleu, nomArme, reset, blanc, degatsArme, reset)
+		} else { fmt.Printf("  %s[E]%s %sAucune arme équipée%s\n", dore, reset, gris, reset) }
 		fmt.Print("Votre attaque : ")
-
 		var choix string
-		if _, err := fmt.Scan(&choix); err != nil {
-			messageErreur("Impossible de lire votre choix.")
-			return false
-		}
-
-		var degats int
-		var nomAttaque string
-
+		if _, err := fmt.Scan(&choix); err != nil { messageErreur("Saisie invalide."); return false }
+		degats := 0
+		attaque := ""
 		switch strings.ToUpper(choix) {
-		case "A":
-			degats = degatsCDP
-			nomAttaque = "CDP"
-
+		case "A": degats, attaque = degatsCDP, "CDP"
 		case "E":
-			if nomAttaqueArme == "" {
-				messageErreur("Équipez une arme pour utiliser cette attaque.")
-				continue
-			}
-
+			if nomArme == "" { messageErreur("Équipez une arme avant d'utiliser E."); continue }
 			degats, _ = c.weaponStats()
-			nomAttaque = nomAttaqueArme
-
-		default:
-			messageErreur("Choix invalide : utilisez A ou E.")
-			continue
+			attaque = nomArme
+		default: messageErreur("Utilisez A ou E."); continue
 		}
-
 		adversaire.Pv -= degats
-		if adversaire.Pv < 0 {
-			adversaire.Pv = 0
-		}
-
-		fmt.Printf("\n  %s%s%s utilise %s%s%s et inflige %s%d dégâts%s !\n",
-			bleu, c.Name, reset,
-			crimson, nomAttaque, reset,
-			blanc, degats, reset)
-
-		if adversaire.Pv == 0 {
-			break
-		}
-
+		if adversaire.Pv < 0 { adversaire.Pv = 0 }
+		messageSucces(fmt.Sprintf("%s utilise %s : %d dégâts.", c.Name, attaque, degats))
+		if adversaire.Pv == 0 { break }
 		c.dmg(adversaire.Damage)
-
-		fmt.Printf("  %s%s%s riposte : %s%d dégâts%s reçus.\n",
-			bleu, adversaire.Name, reset,
-			blanc, adversaire.Damage, reset)
-
+		messageErreur(fmt.Sprintf("%s inflige %d dégâts.", adversaire.Name, adversaire.Damage))
 		if c.isDead(&resurrectionUtilisee) {
 			c.Pv = c.PvMax
-			fmt.Printf("  %sPV restaurés en ville : %d/%d%s\n",
-				blanc, c.Pv, c.PvMax, reset)
+			ligneInfo("Retour en ville", fmt.Sprintf("%d/%d PV", c.Pv, c.PvMax))
 			return false
 		}
-
 		tour++
 	}
-
 	c.Pv = c.PvMax
-
 	titreEcran("VICTOIRE")
 	messageSucces("Vous avez vaincu " + adversaire.Name + " !")
-	fmt.Printf("  %sPV restaurés : %d/%d%s\n",
-		blanc, c.Pv, c.PvMax, reset)
-
+	ligneInfo("PV restaurés", fmt.Sprintf("%d/%d", c.Pv, c.PvMax))
 	return true
 }
 
-func attaqueDeLArme(arme string) string {
-	switch arme {
-	case "Le Marteau de Guerre du Martelier":
-		return "Le coup du marteau"
-	case "Les Dagues de l'Assassin":
-		return "Entaillade"
-	case "Le Glaive du Légionnaire":
-		return "Lame sanglante"
-	case "La Hache de Viking":
-		return "Frappe de barbare"
-	default:
-		return ""
-	}
+func (c *Character) dmg(degats int) {
+	c.Pv -= degats
+	if c.Pv < 0 { c.Pv = 0 }
 }
 
-func (c *Character) dmg(damage int) {
-	c.Pv -= damage
-
-	if c.Pv < 0 {
-		c.Pv = 0
-	}
-}
-
-// isDead renvoie true si la seconde chance a déjà été utilisée.
-func (c *Character) isDead(resurrectionUtilisee *bool) bool {
-	if c.Pv > 0 {
-		return false
-	}
-
-	if !*resurrectionUtilisee {
-		*resurrectionUtilisee = true
+// isDead retourne true à la deuxième mort dans ce combat.
+func (c *Character) isDead(utilisee *bool) bool {
+	if c.Pv > 0 { return false }
+	if !*utilisee {
+		*utilisee = true
 		c.Pv = c.PvMax / 2
-
 		sousTitre("SECONDE CHANCE")
-		fmt.Printf(
-			"  %sLe seigneur de cette voie vous a accordé une seconde chance...%s\n",
-			blanc, reset,
-		)
-		fmt.Printf("  %sNe la gaspillez pas.%s\n", crimson, reset)
-		fmt.Printf("  %sPV : %d/%d%s\n", blanc, c.Pv, c.PvMax, reset)
+		fmt.Printf("  %sLe seigneur de cette voie vous a accordé une seconde chance... Ne la gaspillez pas.%s\n", blanc, reset)
+		ligneInfo("PV", fmt.Sprintf("%d/%d", c.Pv, c.PvMax))
 		return false
 	}
-
 	c.Pv = 0
 	messageErreur("Vous êtes mort. Le combat est perdu.")
 	return true

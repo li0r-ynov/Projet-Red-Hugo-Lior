@@ -1,12 +1,4 @@
 package src
 
-import (
-	"os"
-	"os/exec"
-)
-
-func clearCmd() {
-	cmd := exec.Command("cmd", "/c", "cls")
-	cmd.Stdout = os.Stdout
-	cmd.Run()
-}
+// Les menus restent visibles dans l'historique du terminal.
+// Ce fichier est conservé pour les futurs utilitaires du projet.
