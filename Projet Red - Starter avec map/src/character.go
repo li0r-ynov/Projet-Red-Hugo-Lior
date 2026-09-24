@@ -17,8 +17,10 @@ type Character struct {
 	LimitInventaire         int
 	Damage                  int
 	Vitesse                 int
-	ArmeEquipee      		string
-	ArmuresEquipee  		map[string]string
+	ArmeEquipee             string
+	ArmuresEquipee          map[string]string
+	DirectionTour           string
+	EtageTour               int
 }
 
 // initCharacter initialise un personnage selon sa classe (PV max différents)
@@ -48,6 +50,8 @@ func (c *Character) initCharacter() {
 	c.Inventaire = make(map[string]int)
 	c.ArmuresEquipee = make(map[string]string)
 	c.ArmeEquipee = ""
+	c.DirectionTour = ""
+	c.EtageTour = 1
 }
 
 // displaylnfo affiche les informations principales du personnage.
@@ -66,54 +70,54 @@ func (c Character) displayInfo() {
 	fmt.Printf("\t Pièce d'or : %d\n", c.Money)
 	fmt.Printf("Titre : %s\n", c.Level)
 	fmt.Printf("Renommée : %d\n", c.Renown)
-	
+
 	fmt.Println("=== Équipement ===")
 
-if c.ArmeEquipee == "" {
-	fmt.Println("\t Arme équipée : Aucune")
-	fmt.Println("\t Attaque disponible : CDP")
-} else {
-	fmt.Printf("\t Arme équipée : %s\n", c.ArmeEquipee)
-	fmt.Println("\t Attaque disponible : CDP")
-}
+	if c.ArmeEquipee == "" {
+		fmt.Println("\t Arme équipée : Aucune")
+		fmt.Println("\t Attaque disponible : CDP")
+	} else {
+		fmt.Printf("\t Arme équipée : %s\n", c.ArmeEquipee)
+		fmt.Println("\t Attaque disponible : CDP")
+	}
 
-fmt.Printf(
-	"\t Casque : %s\n",
-	equipmentName(c.ArmuresEquipee["Casque"]),
-)
+	fmt.Printf(
+		"\t Casque : %s\n",
+		equipmentName(c.ArmuresEquipee["Casque"]),
+	)
 
-fmt.Printf(
-	"\t Plastron : %s\n",
-	equipmentName(c.ArmuresEquipee["Plastron"]),
-) 
+	fmt.Printf(
+		"\t Plastron : %s\n",
+		equipmentName(c.ArmuresEquipee["Plastron"]),
+	)
 
-fmt.Printf(
-	"\t Bottes : %s\n",
-	equipmentName(c.ArmuresEquipee["Bottes"]),
-)
+	fmt.Printf(
+		"\t Bottes : %s\n",
+		equipmentName(c.ArmuresEquipee["Bottes"]),
+	)
 
-fmt.Println("=== Statistiques de combat ===")
+	fmt.Println("=== Statistiques de combat ===")
 
-fmt.Printf("\t Dégâts naturels   : %d\n", c.Damage)
-fmt.Printf("\t Vitesse naturelle : %d\n", c.Vitesse)
+	fmt.Printf("\t Dégâts naturels   : %d\n", c.Damage)
+	fmt.Printf("\t Vitesse naturelle : %d\n", c.Vitesse)
 
-cdpDamage, cdpVitesse := c.cdpStats()
+	cdpDamage, cdpVitesse := c.cdpStats()
 
-fmt.Println("\t CDP :")
-fmt.Printf("\t   Dégâts  : %d\n", cdpDamage)
-fmt.Printf("\t   Vitesse : %d\n", cdpVitesse)
+	fmt.Println("\t CDP :")
+	fmt.Printf("\t   Dégâts  : %d\n", cdpDamage)
+	fmt.Printf("\t   Vitesse : %d\n", cdpVitesse)
 
-switch c.ArmeEquipee {
-case "":
-	fmt.Println("\t Arme équipée : Aucune")
+	switch c.ArmeEquipee {
+	case "":
+		fmt.Println("\t Arme équipée : Aucune")
 
-default:
-	weaponDamage, weaponVitesse := c.weaponStats()
+	default:
+		weaponDamage, weaponVitesse := c.weaponStats()
 
-	fmt.Printf("\t %s :\n", c.ArmeEquipee)
-	fmt.Printf("\t   Dégâts  : %d\n", weaponDamage)
-	fmt.Printf("\t   Vitesse : %d\n", weaponVitesse)
-}
+		fmt.Printf("\t %s :\n", c.ArmeEquipee)
+		fmt.Printf("\t   Dégâts  : %d\n", weaponDamage)
+		fmt.Printf("\t   Vitesse : %d\n", weaponVitesse)
+	}
 }
 
 func equipmentName(itemName string) string {
@@ -123,4 +127,3 @@ func equipmentName(itemName string) string {
 
 	return itemName
 }
-
