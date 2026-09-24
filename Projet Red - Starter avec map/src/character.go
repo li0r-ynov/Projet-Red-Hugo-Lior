@@ -66,8 +66,7 @@ func (c Character) displayInfo() {
 }
 
 func (c *Character) isDead() bool {
-	if c.Pv <= 0 {
-		return true
-	}
-	return false
+
+	return c.Pv <= 0
+
 }
