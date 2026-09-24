@@ -47,3 +47,4 @@ func (c *Character) CheckPlace() bool {
 
 	return itemsQuantity < c.LimitInventaire
 }
+
