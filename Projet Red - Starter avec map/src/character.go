@@ -16,7 +16,6 @@ type Character struct {
 	Renown                  int
 	PotionGratuiteRecuperee bool
 	LimitInventaire         int
-	Defence                 int
 	Damage                  int
 	Vitesse                 int
 }
@@ -25,7 +24,6 @@ type Character struct {
 // et lui donne un inventaire de départ.
 func (c *Character) initCharacter() {
 	c.LimitInventaire = 10
-	c.Money = 1000
 	switch c.Classe {
 	case "athénien ":
 		c.PvMax = 100
