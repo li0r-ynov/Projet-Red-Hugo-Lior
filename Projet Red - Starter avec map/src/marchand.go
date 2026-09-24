@@ -104,7 +104,6 @@ func (c *Character) MarketMenu() {
 
 	case 0:
 		return
-
 	default:
 		fmt.Println("Choix invalide.")
 	}

@@ -41,10 +41,11 @@ func (c *Character) initCharacter() {
 		c.Renown = 0
 	}
 	c.Inventaire = map[string]int{
-		PotionSoin:   1,
-		PotionPoison: 1,
-		PotionPaques: 1,
+		PotionSoin:   0,
+		PotionPoison: 0,
+		PotionPaques: 0,
 	}
+
 }
 
 // displaylnfo affiche les informations principales du personnage.
