@@ -20,6 +20,11 @@ type Character struct {
 	Vitesse                 int
 	ArmeEquipee             string
 	ArmuresEquipee          map[string]string
+<<<<<<< HEAD
+=======
+	DirectionTour           string
+	EtageTour               int
+>>>>>>> 67fbb299963fb932cd9c41a83a5c0d3c2a6cf7e0
 }
 
 // initCharacter initialise un personnage selon sa classe (PV max différents)
@@ -49,6 +54,8 @@ func (c *Character) initCharacter() {
 	c.Inventaire = make(map[string]int)
 	c.ArmuresEquipee = make(map[string]string)
 	c.ArmeEquipee = ""
+	c.DirectionTour = ""
+	c.EtageTour = 1
 }
 
 // displaylnfo affiche les informations principales du personnage.
@@ -124,6 +131,7 @@ func equipmentName(itemName string) string {
 
 	return itemName
 }
+<<<<<<< HEAD
 
 func (c *Character) UpgradeInventorySlot() bool {
 	if c.UpgradeCount < 3 {
@@ -133,3 +141,5 @@ func (c *Character) UpgradeInventorySlot() bool {
 	}
 	return false
 }
+=======
+>>>>>>> 67fbb299963fb932cd9c41a83a5c0d3c2a6cf7e0

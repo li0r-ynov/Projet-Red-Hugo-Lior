@@ -44,9 +44,8 @@ default:
 	c.MenuInitCharacter()
 	return
 }
-	c.initCharacter()
-	// fmt.Println(choiceType)
-	c.MenuPrincipal()
+c.initCharacter()
+c.Menutest()
 }
 
 func (c *Character) MenuPrincipal() {
@@ -94,7 +93,8 @@ func (c *Character) Menutest() {
 			c.MarketMenu()
 
 		case 2:
-			fmt.Println("Vous vous dirigez vers la Tour.")
+    		fmt.Println("Vous vous dirigez vers la Tour.")
+    		c.MenuTour()
 
 		case 3:
 			fmt.Println("Vous vous dirigez vers les Maisons des Dieux.")
