@@ -11,7 +11,7 @@ type opps struct {
 var oppsdef = map[string]opps{
 	"Combattant": {Name: "Combattant", PvMax: 60, Pv: 60, Damage: 15},
 	"guerrier":   {Name: "Guerrier", PvMax: 70, Pv: 70, Damage: 18},
-	"Civile":     {Name: "Civile", PvMax: 50, Pv: 50, Damage: 10},
+	"Civil":     {Name: "Civile", PvMax: 50, Pv: 50, Damage: 10},
 	"Bandit":     {Name: "Bandit", PvMax: 60, Pv: 60, Damage: 15},
 	"Mercenaire": {Name: "Mercenaire", PvMax: 70, Pv: 70, Damage: 18},
 	"Héro":       {Name: "Héro", PvMax: 100, Pv: 100, Damage: 22},

@@ -4,12 +4,12 @@ import "fmt"
 
 func (c *Character) DisplayMarket() {
 	fmt.Println("=== Marché ===")
-	fmt.Println("\t 1 - potion d'ambroisie (3 pièces d'or)")
-	fmt.Println("\t 2 - potion de poison (5 pièces d'or)")
-	fmt.Println("\t 3 - Dagues de l'Assassin' (5 pièces d'or)")
-	fmt.Println("\t 4 - Glaives du Légionnaire(5 pièces d'or)")
-	fmt.Println("\t 5 - Marteau de guerre du Martelier (5 pièces d'or)")
-	fmt.Println("\t 6 - Hache de Vikings (5 pièces d'or)")
+	fmt.Println("\t 1 - La potion d'ambroisie (3 pièces d'or)")
+	fmt.Println("\t 2 - La potion de poison (5 pièces d'or)")
+	fmt.Println("\t 3 - Les Dagues de l'Assassin' (5 pièces d'or)")
+	fmt.Println("\t 4 - Le Glaives du Légionnaire(5 pièces d'or)")
+	fmt.Println("\t 5 - Le Marteau de guerre du Martelier (5 pièces d'or)")
+	fmt.Println("\t 6 - Le Hache de Vikings (5 pièces d'or)")
 
 	fmt.Println("\t potion de pâques")
 
@@ -50,8 +50,8 @@ func (c *Character) MarketMenu() {
 			c.addinventory("Potion de poison", 1)
 			c.Moni(5)
 		case 3:
-			fmt.Println("\t Vous venez d'acheter les Dagues d'Assassin !")
-			c.addinventory("Les Dagues d'Assassin", 1)
+			fmt.Println("\t Vous venez d'acheter les Dagues de l'Assassin !")
+			c.addinventory("Les Dagues de l'Assassin", 1)
 			c.Moni(5)
 		case 4:
 			fmt.Println("\t Vous venez d'acheter la Hache de Viking !")

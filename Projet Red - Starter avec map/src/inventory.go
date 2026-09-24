@@ -13,6 +13,7 @@ func (c *Character) accessInventory() {
 		fmt.Println("\t 1 - Utiliser une potion d'ambroisie")
 		fmt.Println("\t 2 - Utiliser une potion de poison")
 		fmt.Println("\t 3 - Utiliser une potion de pâques")
+		fmt.Println("\t 4 - Équiper une arme")
 		fmt.Println("\t 0 - Retour au menu principal")
 
 		fmt.Print("Votre choix : ")
@@ -24,6 +25,8 @@ func (c *Character) accessInventory() {
 			return
 		case 1, 2, 3:
 			c.takePot(test)
+		case 4:
+	c.weaponEquipmentMenu()
 		default:
 			fmt.Println("Choix invalide, veuillez réessayer.")
 		}
