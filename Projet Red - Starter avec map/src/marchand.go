@@ -32,7 +32,6 @@ func (c *Character) MarketMenu() {
 	}
 }
 
-// afficherArticle prend seulement trois arguments : numéro, nom et prix.
 func afficherArticle(numero, nom, prix string) {
 	fmt.Printf(
 		"  %s[%s]%s %s%-26s%s %s%s%s\n",
@@ -42,7 +41,7 @@ func afficherArticle(numero, nom, prix string) {
 	)
 }
 
-func (c Character) afficherBourse() {
+func (c *Character) afficherBourse() {
 	mot := "pièces"
 	if c.Money == 1 {
 		mot = "pièce"
@@ -94,7 +93,6 @@ func (c *Character) MenuMarchand() {
 		switch strings.ToUpper(choix) {
 		case "0":
 			return
-
 		case "M":
 			c.DisplayMarket()
 			continue
@@ -105,7 +103,6 @@ func (c *Character) MenuMarchand() {
 					messageErreur("Inventaire plein.")
 					continue
 				}
-
 				c.addinventory(PotionSoin, 1)
 				c.PotionGratuiteRecuperee = true
 				messageSucces("Le marchand vous offre une potion d'ambroisie.")
@@ -121,29 +118,22 @@ func (c *Character) MenuMarchand() {
 				messageErreur("La potion de Pâques ne peut être achetée qu'une fois.")
 				continue
 			}
-
 			if c.acheterObjet(PotionPaque, 10) {
 				c.PotionPaqueAchetee = true
 			}
 
 		case "4":
 			c.acheterObjet("Les Dagues de l'Assassin", 3)
-
 		case "5":
 			c.acheterObjet("Le Glaive du Légionnaire", 3)
-
 		case "6":
 			c.acheterObjet("Le Marteau de Guerre du Martelier", 3)
-
 		case "7":
 			c.acheterObjet("La Hache de Viking", 3)
-
 		case "8":
 			c.acheterObjet("Fer", 1)
-
 		case "9":
 			c.acheterObjet("Cuir", 1)
-
 		case "10":
 			c.acheterAmeliorationInventaire()
 
@@ -162,12 +152,10 @@ func (c *Character) acheterObjet(nom string, prix int) bool {
 		return false
 	}
 
-	if c.Money < prix {
-		messageErreur("Pièces d'or insuffisantes.")
+	if !c.Moni(prix) {
 		return false
 	}
 
-	c.Money -= prix
 	c.addinventory(nom, 1)
 	messageSucces("Vous obtenez : " + nom)
 	return true
@@ -179,14 +167,11 @@ func (c *Character) acheterAmeliorationInventaire() {
 		return
 	}
 
-	if c.Money < 30 {
-		messageErreur("Il faut 30 pièces d'or.")
+	if !c.Moni(30) {
 		return
 	}
 
-	c.Money -= 30
 	c.UpgradeInventorySlot()
-
 	messageSucces(fmt.Sprintf(
 		"Inventaire amélioré : %d places.",
 		c.LimitInventaire,

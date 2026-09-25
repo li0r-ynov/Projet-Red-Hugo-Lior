@@ -19,32 +19,17 @@ func (c *Character) TowerTravelDisplay(
 }
 
 func (c *Character) MenuTour() {
-	// Ce passage ne s'affiche qu'avant le premier choix de voie.
 	if c.DirectionTour == "" {
 		afficherLoreEntreeTour()
 	}
 
 	for c.DirectionTour == "" {
 		titreEcran("LA TOUR")
-		fmt.Printf(
-			"  %sDeux escaliers s'ouvrent devant vous.%s\n",
-			blanc, reset,
-		)
-		fmt.Printf(
-			"  %sVotre choix sera définitif.%s\n",
-			crimson, reset,
-		)
+		fmt.Printf("  %sVotre choix sera définitif.%s\n", crimson, reset)
 		separateur()
 
-		option(
-			"1",
-			"Des escaliers éblouis d'une lumière chaude et agréable",
-		)
-		option(
-			"2",
-			"Des escaliers sombres, si profonds qu'ils semblent "+
-				"descendre au centre de la Terre",
-		)
+		option("1", "Des escaliers éblouis d'une lumière chaude et agréable")
+		option("2", "Des escaliers sombres, si profonds qu'ils semblent descendre au centre de la Terre")
 		option("0", "Retour à Athènes")
 		fmt.Print("Votre choix : ")
 
@@ -57,15 +42,12 @@ func (c *Character) MenuTour() {
 		switch choix {
 		case 0:
 			return
-
 		case 1:
 			c.DirectionTour = "Monter"
 			afficherLoreChoixVoie(c.DirectionTour)
-
 		case 2:
 			c.DirectionTour = "Descendre"
 			afficherLoreChoixVoie(c.DirectionTour)
-
 		default:
 			messageErreur("Choix invalide.")
 		}
@@ -74,13 +56,12 @@ func (c *Character) MenuTour() {
 	for {
 		if c.EtageTour > 5 {
 			titreEcran("VOIE TERMINÉE")
-			messageSucces("Cinq combats remportés.")
+			messageSucces("Vous avez remporté les cinq combats.")
 			return
 		}
 
 		nom := adversaireEtage(c.DirectionTour, c.EtageTour)
 		adversaire, existe := oppsdef[nom]
-
 		if !existe {
 			messageErreur("Adversaire introuvable : " + nom)
 			return
@@ -111,9 +92,6 @@ func (c *Character) MenuTour() {
 			}
 
 			etage := c.EtageTour
-
-			// Le joueur a déjà dépassé le titre Héros ou Démon
-			// lorsqu'il arrive au cinquième étage.
 			if etage == 5 {
 				afficherLoreDernierEtage(c.DirectionTour)
 			}
@@ -148,27 +126,24 @@ func adversaireEtage(direction string, etage int) string {
 	if etage < 1 || etage > 5 {
 		return ""
 	}
-
 	if direction == "Monter" {
 		return monter[etage]
 	}
-
 	if direction == "Descendre" {
 		return descendre[etage]
 	}
-
 	return ""
 }
 
 func (c *Character) recompenseEtage(etage int) {
 	seuils := []int{0, 100, 300, 700, 1500, 3100}
-	renown := seuils[etage]
+	renommeeVoulue := seuils[etage]
 
 	if c.DirectionTour == "Descendre" {
-		renown = -renown
+		renommeeVoulue = -renommeeVoulue
 	}
 
-	c.ChangeRenown(renown - c.Renown)
+	c.ChangeRenown(renommeeVoulue - c.Renown)
 
 	sousTitre("RÉCOMPENSES")
 	ligneInfo("Titre", c.Level)
@@ -192,7 +167,6 @@ func (c *Character) recompenseEtage(etage int) {
 
 func (c *Character) donnerButin(nom string, quantite int) {
 	placesLibres := c.LimitInventaire - c.nombreObjets()
-
 	if placesLibres < quantite {
 		quantite = placesLibres
 	}

@@ -26,31 +26,22 @@ func attaqueDeLArme(nom string) string {
 	}
 }
 
-// combat retourne true en cas de victoire.
-// Les PV du joueur sont restaurés à la fin du combat.
 func (c *Character) combat(adversaire opps) bool {
 	resurrectionUtilisee := false
 	tour := 1
-
 	titreEcran("COMBAT CONTRE " + adversaire.Name)
 
 	for c.Pv > 0 && adversaire.Pv > 0 {
 		titreEcran(fmt.Sprintf("TOUR %d", tour))
-
 		ligneInfo(c.Name, fmt.Sprintf("%d/%d PV", c.Pv, c.PvMax))
-		ligneInfo(
-			adversaire.Name,
-			fmt.Sprintf("%d/%d PV", adversaire.Pv, adversaire.PvMax),
-		)
+		ligneInfo(adversaire.Name, fmt.Sprintf("%d/%d PV", adversaire.Pv, adversaire.PvMax))
 		separateur()
 		sousTitre("ACTIONS")
 
 		degatsCDP, _ := c.cdpStats()
 		fmt.Printf(
 			"  %s[A]%s %sCDP%s — %s%d dégâts%s\n",
-			dore, reset,
-			bleu, reset,
-			blanc, degatsCDP, reset,
+			dore, reset, bleu, reset, blanc, degatsCDP, reset,
 		)
 
 		nomArme := attaqueDeLArme(c.ArmeEquipee)
@@ -58,26 +49,20 @@ func (c *Character) combat(adversaire opps) bool {
 			degatsArme, _ := c.weaponStats()
 			fmt.Printf(
 				"  %s[E]%s %s%s%s — %s%d dégâts%s\n",
-				dore, reset,
-				bleu, nomArme, reset,
-				blanc, degatsArme, reset,
+				dore, reset, bleu, nomArme, reset, blanc, degatsArme, reset,
 			)
 		} else {
-			fmt.Printf(
-				"  %s[E]%s %sAucune arme équipée%s\n",
-				dore, reset, gris, reset,
-			)
+			fmt.Printf("  %s[E]%s %sAucune arme équipée%s\n",
+				dore, reset, gris, reset)
 		}
 
 		fmt.Printf(
 			"  %s[P]%s %sPotion de poison%s — %s10 dégâts/s pendant 3 s • x%d%s\n",
-			dore, reset,
-			bleu, reset,
+			dore, reset, bleu, reset,
 			blanc, c.Inventaire[PotionPoison], reset,
 		)
 
 		fmt.Print("Votre action : ")
-
 		var choix string
 		if _, err := fmt.Scan(&choix); err != nil {
 			messageErreur("Saisie invalide.")
@@ -90,15 +75,11 @@ func (c *Character) combat(adversaire opps) bool {
 			if adversaire.Pv < 0 {
 				adversaire.Pv = 0
 			}
-
-			messageSucces(fmt.Sprintf(
-				"%s utilise CDP : %d dégâts.",
-				c.Name, degatsCDP,
-			))
+			messageSucces(fmt.Sprintf("CDP : %d dégâts.", degatsCDP))
 
 		case "E":
 			if nomArme == "" {
-				messageErreur("Équipez une arme avant d'utiliser E.")
+				messageErreur("Équipez une arme pour utiliser E.")
 				continue
 			}
 
@@ -107,11 +88,7 @@ func (c *Character) combat(adversaire opps) bool {
 			if adversaire.Pv < 0 {
 				adversaire.Pv = 0
 			}
-
-			messageSucces(fmt.Sprintf(
-				"%s utilise %s : %d dégâts.",
-				c.Name, nomArme, degatsArme,
-			))
+			messageSucces(fmt.Sprintf("%s : %d dégâts.", nomArme, degatsArme))
 
 		case "P":
 			if c.Inventaire[PotionPoison] <= 0 {
@@ -128,7 +105,6 @@ func (c *Character) combat(adversaire opps) bool {
 			continue
 		}
 
-		// L'adversaire ne riposte pas s'il vient d'être vaincu.
 		if adversaire.Pv == 0 {
 			break
 		}
@@ -141,10 +117,7 @@ func (c *Character) combat(adversaire opps) bool {
 
 		if c.isDead(&resurrectionUtilisee) {
 			c.Pv = c.PvMax
-			ligneInfo(
-				"Retour en ville",
-				fmt.Sprintf("%d/%d PV", c.Pv, c.PvMax),
-			)
+			ligneInfo("Retour en ville", fmt.Sprintf("%d/%d PV", c.Pv, c.PvMax))
 			return false
 		}
 
@@ -155,7 +128,6 @@ func (c *Character) combat(adversaire opps) bool {
 	titreEcran("VICTOIRE")
 	messageSucces("Vous avez vaincu " + adversaire.Name + " !")
 	ligneInfo("PV restaurés", fmt.Sprintf("%d/%d", c.Pv, c.PvMax))
-
 	return true
 }
 
@@ -166,7 +138,6 @@ func (c *Character) dmg(degats int) {
 	}
 }
 
-// isDead retourne true à la deuxième mort dans ce combat.
 func (c *Character) isDead(utilisee *bool) bool {
 	if c.Pv > 0 {
 		return false
